@@ -121,8 +121,8 @@ Columnas: `id`, `nombre_producto`, `variante`, `categoria`, `precio`, `imagen_ur
 
 - **`precio`** acepta `34999`, `34.999` o `$34.999`.
 - **`destacado`** marca cuál modelo encabeza la portada.
-- **`stock` y `personalizable` se leen pero no se muestran**: se imprime a pedido y no hay
-  personalización. La omisión es deliberada.
+- **`stock` y `personalizable` se leen pero no se muestran**: hay stock permanente de los seis
+  modelos y no hay personalización. La omisión es deliberada.
 - **`imagen_url` es un respaldo.** Si existe `public/fotos/<slug>.<ext>`, esa foto local gana.
 
 ### Precios por cantidad

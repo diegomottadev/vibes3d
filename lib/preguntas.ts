@@ -53,8 +53,8 @@ export const preguntas = [
   {
     pregunta: '¿Tenés stock?',
     respuesta:
-      'Cada lámpara se imprime cuando la pedís, así que no hay problema de stock. Al escribirme ' +
-      'te confirmo el plazo según el modelo que elijas.',
+      'Sí, tenemos stock permanente de los seis modelos: no hay que esperar a que se imprima. ' +
+      'Al escribirme te confirmo cuándo sale tu pedido.',
   },
 ];
 

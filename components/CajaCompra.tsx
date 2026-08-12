@@ -114,7 +114,8 @@ export function CajaCompra({ variante }: { variante: Variante }) {
         ) : null}
 
         <p className="mt-4 text-xs leading-relaxed text-humo">
-          Se imprime a pedido. El envío se cotiza según tu localidad y lo coordinamos por WhatsApp.
+          Stock permanente. El envío es por Correo Argentino: se cotiza según tu localidad y lo
+          coordinamos por WhatsApp.
         </p>
       </div>
     </aside>

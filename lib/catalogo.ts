@@ -46,7 +46,7 @@ export type Variante = {
 };
 
 // Las columnas `stock` y `personalizable` se leen del CSV pero no se exponen ni se renderizan:
-// se imprime a pedido y no hay personalización. Se dejan documentadas acá para que quede claro
+// hay stock permanente de los seis y no hay personalización. Se dejan documentadas acá para que quede claro
 // que la omisión es deliberada y no un olvido.
 
 function sinAcentos(texto: string): string {

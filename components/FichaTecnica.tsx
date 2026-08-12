@@ -6,7 +6,7 @@ const filas = [
   { dato: 'Iluminación', valor: ficha.iluminacion },
   { dato: 'Conexión', valor: ficha.cable },
   { dato: 'Soporte', valor: 'Trípode incluido' },
-  { dato: 'Producción', valor: 'Se imprime a pedido' },
+  { dato: 'Disponibilidad', valor: 'Stock permanente de los seis modelos' },
 ];
 
 export function FichaTecnica() {

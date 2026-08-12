@@ -40,7 +40,7 @@ function descripcionDelSitio(cantidadModelos: number): string {
 
   return (
     `Lámpara Geométrica de mesa, en ${cantidadModelos} diseños de pantalla. ` +
-    `Hecha a pedido en ${lugar}. Elegís tu modelo y coordinamos todo por WhatsApp.`
+    `Stock permanente en ${lugar}. Elegís tu modelo y coordinamos todo por WhatsApp.`
   );
 }
 

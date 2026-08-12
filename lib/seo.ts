@@ -51,7 +51,7 @@ export function jsonLdProducto(variante: Variante) {
       url: urlDeVariante(variante.slug),
       price: variante.precio,
       priceCurrency: sitio.moneda,
-      // Se imprime a pedido, así que siempre hay disponibilidad.
+      // Hay stock permanente de los seis modelos, así que siempre hay disponibilidad.
       availability: 'https://schema.org/InStock',
       itemCondition: 'https://schema.org/NewCondition',
       seller: {
@@ -73,7 +73,7 @@ export function jsonLdNegocio() {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
     name: sitio.marca,
-    description: `${sitio.tagline}. Lámparas geométricas hechas a pedido.`,
+    description: `${sitio.tagline}. Lámparas geométricas de mesa en seis diseños de pantalla.`,
     url: sitio.url,
     telephone: sitio.whatsappVisible,
     address: {
