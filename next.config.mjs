@@ -22,6 +22,25 @@ const nextConfig = {
       },
     ],
   },
+
+  experimental: {
+    /**
+     * `lib/catalogo.ts` busca la foto de cada modelo con `fs.readdirSync('public/fotos')`.
+     * En el build eso funciona, pero las páginas declaran `revalidate = 3600`: cada hora
+     * el catálogo se vuelve a leer dentro de una función serverless, y ahí `public/` no
+     * existe —Vercel sube esos archivos al CDN, no al bundle de la función—. El readdir
+     * falla, `fotoLocal` devuelve null y las fotos reales se cambian solas por el
+     * placeholder de Unsplash de la planilla, sin ningún error visible.
+     *
+     * Esto le pide al tracer que meta las fotos en el bundle de las rutas que leen el
+     * catálogo. Si alguna vez el catálogo se lee desde una ruta nueva, hay que agregarla acá.
+     */
+    outputFileTracingIncludes: {
+      '/': ['./public/fotos/**'],
+      '/lampara/[slug]': ['./public/fotos/**'],
+      '/sitemap.xml': ['./public/fotos/**'],
+    },
+  },
 };
 
 export default nextConfig;

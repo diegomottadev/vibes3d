@@ -41,6 +41,62 @@ npm run catalogo   # muestra la planilla por consola (no necesita npm install)
 
 ---
 
+## Deploy en Vercel
+
+El repo es un Next.js estándar: Vercel lo detecta solo. No hace falta `vercel.json` ni tocar los
+comandos de build.
+
+### 1. Variable de entorno (obligatoria)
+
+| Variable | Ejemplo | Dónde |
+| --- | --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | `https://vibes3d.vercel.app` | Production, Preview y Development |
+
+Sin dominio final todavía, poner la URL que asigna Vercel (`https://<proyecto>.vercel.app`) y
+cambiarla cuando esté el dominio propio.
+
+**Sin barra al final** y **sin `localhost`**: si falta o apunta a una máquina local, el build
+**falla a propósito** (`lib/site.ts`) con este error:
+
+```
+Error: NEXT_PUBLIC_SITE_URL no está definida. El sitio se publicaría con canonical,
+Open Graph y sitemap apuntando a una máquina local.
+```
+
+Es deliberado: sin eso el sitio se ve perfecto pero Google no indexa nada, y esa falla es
+silenciosa. Mejor que reviente el deploy.
+
+`.env.local` está en `.gitignore` y no viaja al repo: en Vercel la variable se carga a mano en
+**Settings → Environment Variables**.
+
+### 2. Pasos
+
+1. [vercel.com/new](https://vercel.com/new) → importar `diegomottadev/vibes3d`.
+2. Framework: **Next.js** (autodetectado). Build y output: los que vienen por defecto.
+3. Agregar `NEXT_PUBLIC_SITE_URL` en los tres entornos.
+4. **Deploy**.
+
+### 3. Al conectar el dominio propio
+
+Cambiar `NEXT_PUBLIC_SITE_URL` al dominio nuevo y **redeployar**: los canonical, el sitemap y las
+imágenes de Open Graph se hornean en el build, así que no se actualizan solos.
+
+### Cada cuánto se actualizan los precios
+
+Las páginas declaran `revalidate = 3600`, así que un cambio en la planilla tarda **hasta una hora**
+en verse. Para que impacte ya: **Deployments → ... → Redeploy**.
+
+### Las fotos y el ISR
+
+`lib/catalogo.ts` busca las fotos con `fs.readdirSync('public/fotos')`. Esa lectura también corre en
+cada revalidación, dentro de una función serverless donde `public/` no existe —Vercel sube esos
+archivos al CDN, no al bundle—. Por eso `next.config.mjs` declara `outputFileTracingIncludes` para
+`/`, `/lampara/[slug]` y `/sitemap.xml`. **Si el catálogo se lee desde una ruta nueva, hay que
+agregarla ahí**, o al cabo de una hora esa ruta cambia sola las fotos reales por el placeholder de
+Unsplash, sin ningún error visible.
+
+---
+
 ## De dónde salen los datos
 
 El catálogo vive en una **planilla de Google publicada como CSV** y se lee en tiempo de build:
@@ -139,18 +195,14 @@ public/fotos/             acá van las fotos reales (ver LEEME.md)
 
 ## Pendientes
 
-1. **Falta una foto.** Están cargadas cinco de las seis en `public/fotos/`; falta
-   `hexagonal-pequeno`, que hasta entonces muestra el placeholder de la planilla.
-   Una foto en `public/fotos/<slug>.<ext>` le gana automáticamente a la `imagen_url` del CSV,
-   así que alcanza con dejar el archivo ahí. Detalle en `public/fotos/LEEME.md`.
-
-2. **Descripciones por modelo.** En la planilla las seis comparten el mismo texto, y eso es
+1. **Descripciones por modelo.** En la planilla las seis comparten el mismo texto, y eso es
    contenido duplicado entre seis URLs. Escribí un borrador distinto para cada una en
    `lib/descripciones.ts`: **hay que leerlo y corregirlo**, y lo ideal es después pasarlo a la
    columna `descripcion` de la planilla y borrar ese archivo.
 
-3. **Dominio.** Falta definirlo y cargarlo en `NEXT_PUBLIC_SITE_URL`.
+2. **Dominio.** Falta definirlo y cargarlo en `NEXT_PUBLIC_SITE_URL` (ver *Deploy en Vercel*).
+   Mientras tanto sirve la URL `.vercel.app`.
 
-4. **Datos sin confirmar para las preguntas frecuentes** (están listados como comentario en
+3. **Datos sin confirmar para las preguntas frecuentes** (están listados como comentario en
    `components/Preguntas.tsx`): si el foco LED viene incluido, cómo son los envíos y cuánto tarda
    la entrega.

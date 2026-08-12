@@ -1,0 +1,11 @@
+# El repo se edita en Windows y se buildea en Linux (Vercel). Sin esto, cada archivo que
+# toca Windows aparece como "modificado entero" al mirarlo desde otra máquina.
+* text=auto eol=lf
+
+# Binarios: que git no intente normalizar nada.
+*.webp binary
+*.avif binary
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.ico binary
