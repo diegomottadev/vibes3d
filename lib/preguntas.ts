@@ -7,7 +7,6 @@ import { ficha } from './seo';
  * y para el JSON-LD que lee Google. Una sola fuente, así nunca se desincronizan.
  *
  * PENDIENTE de confirmar con Francisco antes de agregarlas:
- *  - ¿El foco LED viene incluido con la lámpara o se compra aparte?
  *  - ¿Hace envíos a todo el país? ¿Con qué correo? ¿Hay retiro en persona?
  *  - ¿Cuánto tarda en imprimirse y entregarse?
  */
@@ -28,8 +27,14 @@ export const preguntas = [
     respuesta: `${ficha.anchoMm} mm de ancho por ${ficha.altoMm} mm de alto, con el trípode incluido. Es una lámpara de mesa: va bien en una mesa de luz, un escritorio o una repisa.`,
   },
   {
+    pregunta: '¿El foco viene incluido?',
+    respuesta:
+      'Sí, viene con la lámpara: no hay que comprarlo aparte. También trae el cable con ' +
+      'interruptor y enchufe de 220 V, así que la conectás y ya funciona.',
+  },
+  {
     pregunta: '¿Qué tipo de luz usa?',
-    respuesta: `Usa un ${ficha.iluminacion.toLowerCase()}, que es la que hace que la trama se vea tibia y no blanca.`,
+    respuesta: `${ficha.iluminacion}. Esa es la que hace que la trama se vea tibia y no blanca.`,
   },
   {
     pregunta: '¿Cómo hago el pedido?',
