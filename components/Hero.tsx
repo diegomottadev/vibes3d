@@ -29,8 +29,7 @@ export function Hero({ destacada, cantidadModelos }: { destacada: Variante; cant
           <p className="mt-6 max-w-md text-lg leading-relaxed text-humo">
             Lámpara de mesa con trípode para el escritorio, la mesa de luz o cualquier rincón que
             pida luz cálida. {cantidadModelos} diseños de pantalla: elegís el que mejor va con tu
-            decoración. Incluye cable transparente de 1,5 m con interruptor y enchufe de 220 V —
-            la enchufás y ya está.
+            decoración. Incluye cable transparente de 1,5 m con interruptor y enchufe de 220 V.
           </p>
 
           <div className="mt-10">
