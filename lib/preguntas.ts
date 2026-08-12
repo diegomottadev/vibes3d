@@ -18,7 +18,7 @@ export const preguntas = [
     respuesta:
       'Solo en la trama de la pantalla, que es lo que define el dibujo que se ve al encenderla y ' +
       'cuánta luz deja pasar. El cuerpo, el trípode y las medidas son los mismos, y todos valen ' +
-      'igual: elegís por gusto, no por precio.',
+      'igual.',
   },
   {
     pregunta: '¿De qué material está hecha?',
