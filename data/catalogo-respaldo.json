@@ -1,0 +1,74 @@
+[
+  {
+    "id": "1",
+    "nombre_producto": "Lámpara Geométrica",
+    "variante": "Pantalla Hexagonal Grande",
+    "categoria": "Lamparas",
+    "precio": "34999",
+    "imagen_url": "https://images.unsplash.com/photo-1507473885765-e6ed057f782c",
+    "descripcion": "Lámpara de mesa 3D con soporte de trípode. Compatible con Bambu Lab LED Kit MH001 o bombilla E27. Dimensiones: 130mm x 230mm.",
+    "stock": "1",
+    "personalizable": "TRUE",
+    "destacado": "TRUE"
+  },
+  {
+    "id": "2",
+    "nombre_producto": "Lámpara Geométrica",
+    "variante": "Pantalla Hexagonal Pequeño",
+    "categoria": "Lamparas",
+    "precio": "34999",
+    "imagen_url": "https://images.unsplash.com/photo-1507473885765-e6ed057f782c",
+    "descripcion": "Lámpara de mesa 3D con soporte de trípode. Compatible con Bambu Lab LED Kit MH001 o bombilla E27. Dimensiones: 130mm x 230mm.",
+    "stock": "1",
+    "personalizable": "TRUE",
+    "destacado": "FALSE"
+  },
+  {
+    "id": "3",
+    "nombre_producto": "Lámpara Geométrica",
+    "variante": "Pantalla Triángulo Desplazado",
+    "categoria": "Lamparas",
+    "precio": "34999",
+    "imagen_url": "https://images.unsplash.com/photo-1507473885765-e6ed057f782c",
+    "descripcion": "Lámpara de mesa 3D con soporte de trípode. Compatible con Bambu Lab LED Kit MH001 o bombilla E27. Dimensiones: 130mm x 230mm.",
+    "stock": "1",
+    "personalizable": "TRUE",
+    "destacado": "FALSE"
+  },
+  {
+    "id": "4",
+    "nombre_producto": "Lámpara Geométrica",
+    "variante": "Pantalla Voronoi",
+    "categoria": "Lamparas",
+    "precio": "34999",
+    "imagen_url": "https://images.unsplash.com/photo-1507473885765-e6ed057f782c",
+    "descripcion": "Lámpara de mesa 3D con soporte de trípode. Compatible con Bambu Lab LED Kit MH001 o bombilla E27. Dimensiones: 130mm x 230mm.",
+    "stock": "1",
+    "personalizable": "TRUE",
+    "destacado": "FALSE"
+  },
+  {
+    "id": "5",
+    "nombre_producto": "Lámpara Geométrica",
+    "variante": "Pantalla Diamante Grande",
+    "categoria": "Lamparas",
+    "precio": "34999",
+    "imagen_url": "https://images.unsplash.com/photo-1507473885765-e6ed057f782c",
+    "descripcion": "Lámpara de mesa 3D con soporte de trípode. Compatible con Bambu Lab LED Kit MH001 o bombilla E27. Dimensiones: 130mm x 230mm.",
+    "stock": "1",
+    "personalizable": "TRUE",
+    "destacado": "FALSE"
+  },
+  {
+    "id": "6",
+    "nombre_producto": "Lámpara Geométrica",
+    "variante": "Pantalla Diamante Horizontal",
+    "categoria": "Lamparas",
+    "precio": "34999",
+    "imagen_url": "https://images.unsplash.com/photo-1507473885765-e6ed057f782c",
+    "descripcion": "Lámpara de mesa 3D con soporte de trípode. Compatible con Bambu Lab LED Kit MH001 o bombilla E27. Dimensiones: 130mm x 230mm.",
+    "stock": "1",
+    "personalizable": "TRUE",
+    "destacado": "FALSE"
+  }
+]

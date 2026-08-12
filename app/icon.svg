@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!--
+    Favicon: la silueta de la lámpara, pantalla encendida sobre el trípode.
+    SVG y no PNG generado con next/og porque @vercel/og no arranca cuando la ruta del
+    proyecto tiene espacios (Next 14 en Windows). Un archivo estático no tiene ese problema
+    y además se edita a mano.
+    Colores: noche #0B0B0C, luz #F2B544, hueso #EDEAE3 (los mismos de tailwind.config.ts).
+  -->
+  <rect width="32" height="32" fill="#0B0B0C"/>
+  <path d="M11 6 H21 L24 18 H8 Z" fill="#F2B544"/>
+  <g stroke="#EDEAE3" stroke-width="1.8" stroke-linecap="round">
+    <path d="M16 18 V22"/>
+    <path d="M16 22 L11 27"/>
+    <path d="M16 22 L21 27"/>
+  </g>
+</svg>

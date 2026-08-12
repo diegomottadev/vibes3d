@@ -1,0 +1,184 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-noche text-hueso antialiased;
+  }
+
+  ::selection {
+    @apply bg-luz text-noche;
+  }
+
+  /* Foco visible y consistente: PrimeReact y los elementos nativos comparten el mismo anillo. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-luz ring-offset-2 ring-offset-noche;
+  }
+}
+
+@layer components {
+  .etiqueta {
+    @apply font-display text-xs uppercase tracking-etiqueta text-humo;
+  }
+
+  .contenedor {
+    @apply mx-auto w-full max-w-contenido px-6 md:px-10;
+  }
+
+  /* El resplandor detrás de la lámpara. Decorativo, no interfiere con el contenido. */
+  .halo {
+    @apply pointer-events-none absolute rounded-full blur-3xl;
+    background: radial-gradient(circle, rgba(242, 181, 68, 0.35) 0%, rgba(242, 181, 68, 0) 70%);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   PrimeReact: ajustes para que el tema oscuro del paquete hable el mismo idioma
+   que la paleta del sitio en vez de parecer un panel de administración.
+   --------------------------------------------------------------------------- */
+
+.p-component {
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+.p-dialog {
+  @apply border border-noche-borde bg-noche-suave;
+  border-radius: 0;
+}
+
+.p-dialog .p-dialog-header,
+.p-dialog .p-dialog-content,
+.p-dialog .p-dialog-footer {
+  @apply bg-noche-suave text-hueso;
+}
+
+.p-dialog .p-dialog-header {
+  @apply border-b border-noche-borde;
+}
+
+/* El pie queda fuera del área que scrollea: ahí viven el total y el CTA, que tienen que
+   verse siempre por más largo que sea el formulario. */
+.p-dialog .p-dialog-footer {
+  @apply border-t border-noche-borde pt-5;
+}
+
+.p-dialog-mask.p-component-overlay {
+  background-color: rgba(11, 11, 12, 0.85);
+}
+
+/* Campos con relieve, al estilo Bootstrap: fondo más claro que la superficie donde apoyan,
+   borde visible y una sombra interior que los hunde apenas. Sin eso, sobre un tema oscuro un
+   input parece un rectángulo dibujado y no algo donde se escribe.
+
+   El `border` (grosor) es imprescindible: el preflight de Tailwind pone border-width:0 en todo,
+   así que sin esto ningún color de borde se ve, ni el normal ni el de error. */
+.p-inputtext,
+.p-inputtextarea,
+.p-inputnumber-input,
+.p-dropdown {
+  @apply rounded-md border border-campo-borde bg-campo px-3 py-2.5 text-hueso placeholder:text-humo;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+.p-inputtext:enabled:hover,
+.p-inputtextarea:enabled:hover,
+.p-inputnumber-input:enabled:hover,
+.p-dropdown:not(.p-disabled):hover {
+  @apply border-humo;
+}
+
+/* El foco suma un halo ámbar además del borde, como el glow de Bootstrap. */
+.p-inputtext:enabled:focus,
+.p-inputtextarea:enabled:focus,
+.p-inputnumber-input:enabled:focus,
+.p-dropdown:not(.p-disabled).p-focus {
+  @apply border-luz outline-none;
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.45),
+    0 0 0 3px rgba(242, 181, 68, 0.2);
+}
+
+/* El anillo global de :focus-visible sobra en los campos: ya tienen su propio halo. */
+.p-inputtext:focus-visible,
+.p-inputtextarea:focus-visible,
+.p-inputnumber-input:focus-visible,
+.p-dropdown:focus-visible {
+  @apply ring-0 ring-offset-0;
+}
+
+.p-dropdown .p-dropdown-label {
+  @apply p-0 text-hueso;
+}
+
+.p-dropdown-panel {
+  @apply rounded-md border border-campo-borde bg-noche-suave;
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  @apply text-hueso;
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+  @apply bg-luz-tenue/30 text-luz;
+}
+
+/* El estado inválido NO se resuelve acá: las reglas de arriba le ganan al `p-invalid` del tema,
+   así que el borde rojo se aplica desde el componente con la utilidad `!border-alerta`.
+   Ver el componente Campo en components/DialogoPedido.tsx. */
+
+/* Mismas medidas y misma tipografía que los botones propios, para que un PrimeReact Button y un
+   <button> nuestro puedan ir uno al lado del otro sin que se note la diferencia. */
+.p-button {
+  @apply justify-center gap-2 rounded-none px-6 py-3 font-display text-xs uppercase tracking-etiqueta;
+}
+
+/* Por defecto PrimeReact estira el label para ocupar todo el ancho, lo que deja el ícono
+   pegado al borde izquierdo y el texto en el centro. Con esto viajan juntos. */
+.p-button .p-button-label {
+  @apply flex-none;
+}
+
+.p-button .p-button-icon-left {
+  @apply mr-0;
+}
+
+/* Un botón de solo ícono no lleva el padding de uno con texto: con `px-6 py-3` queda enorme
+   y termina aplastando lo que tenga al lado. Pasó con los +/- del contador de cantidad. */
+.p-button.p-button-icon-only,
+.p-inputnumber-button {
+  @apply px-0 py-0;
+}
+
+.p-button:not(.p-button-text):not(.p-button-outlined) {
+  @apply border-luz bg-luz text-noche;
+}
+
+.p-button:not(.p-button-text):not(.p-button-outlined):enabled:hover {
+  @apply border-luz-calida bg-luz-calida text-noche;
+}
+
+.p-accordion .p-accordion-header .p-accordion-header-link {
+  @apply rounded-none border-x-0 border-t-0 border-b border-noche-borde bg-transparent text-hueso;
+}
+
+.p-accordion .p-accordion-header:not(.p-disabled).p-highlight .p-accordion-header-link {
+  @apply bg-transparent text-luz;
+}
+
+.p-accordion .p-accordion-content {
+  @apply rounded-none border-x-0 border-t-0 border-b border-noche-borde bg-transparent text-humo;
+}
+
+.p-galleria,
+.p-galleria-content {
+  @apply bg-transparent;
+}
