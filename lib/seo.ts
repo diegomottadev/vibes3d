@@ -73,7 +73,7 @@ export function jsonLdNegocio() {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
     name: sitio.marca,
-    description: `${sitio.tagline}. Lámparas geométricas impresas en 3D.`,
+    description: `${sitio.tagline}. Lámparas geométricas hechas a pedido.`,
     url: sitio.url,
     telephone: sitio.whatsappVisible,
     address: {

@@ -39,7 +39,7 @@ function descripcionDelSitio(cantidadModelos: number): string {
     : 'Argentina';
 
   return (
-    `Lámpara Geométrica impresa en 3D, en ${cantidadModelos} diseños de pantalla. ` +
+    `Lámpara Geométrica de mesa, en ${cantidadModelos} diseños de pantalla. ` +
     `Hecha a pedido en ${lugar}. Elegís tu modelo y coordinamos todo por WhatsApp.`
   );
 }
@@ -53,7 +53,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const variantes = await obtenerCatalogo();
   const destacada = await obtenerDestacada();
   const descripcion = descripcionDelSitio(variantes.length);
-  const titulo = 'Lámpara Geométrica impresa en 3D';
+  const titulo = 'Lámpara Geométrica de mesa';
   const imagen = {
     url: destacada.imagen,
     alt: `Lámpara Geométrica con ${destacada.patron}, encendida`,
@@ -69,12 +69,11 @@ export async function generateMetadata(): Promise<Metadata> {
     applicationName: sitio.marca,
     keywords: [
       'lámpara geométrica',
-      'lámpara impresa en 3D',
       'lámpara de mesa',
-      'impresión 3D Argentina',
+      'lámpara decorativa',
       'lámpara voronoi',
       'lámpara hexagonal',
-      'decoración impresa en 3D',
+      'luz de ambiente',
     ],
     alternates: {
       canonical: '/',

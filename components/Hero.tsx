@@ -11,16 +11,16 @@ export function Hero({ destacada, cantidadModelos }: { destacada: Variante; cant
 
       <div className="contenedor relative grid items-center gap-12 py-20 md:grid-cols-2 md:py-28">
         <div>
-          {/* "Impresa en 3D" va dentro del h1 y no en el párrafo de abajo: es la frase con la que
-              la gente busca, y el h1 es la señal más fuerte de la página después del title.
-              La localidad ya no se muestra acá; sigue en el pie y en el JSON-LD de LocalBusiness,
+          {/* El subtítulo del h1 habla de lo que hace la lámpara, no de cómo está fabricada:
+              al que compra le importa la luz sobre la pared, no la impresora.
+              La localidad no se muestra acá; sigue en el pie y en el JSON-LD de LocalBusiness,
               que es lo que lee Google para el SEO local. */}
           <h1 className="font-display text-5xl leading-[0.95] tracking-tight text-hueso sm:text-6xl lg:text-7xl">
             Lámpara
             <br />
             Geométrica<span className="text-luz">.</span>
             <span className="mt-4 block font-display text-xl tracking-tight text-humo sm:text-2xl">
-              Impresa en 3D.
+              Luz que dibuja.
             </span>
           </h1>
 
