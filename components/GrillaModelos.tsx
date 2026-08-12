@@ -12,11 +12,6 @@ export function GrillaModelos({ variantes }: { variantes: Variante[] }) {
         <h2 className="mt-4 max-w-2xl font-display text-4xl leading-tight tracking-tight text-hueso sm:text-5xl">
           Misma lámpara, seis tramas distintas.
         </h2>
-        <p className="mt-4 max-w-xl leading-relaxed text-humo">
-          Lo único que cambia es la pantalla, y con ella el dibujo que aparece al encenderla. Tocá
-          cualquiera para ver el detalle.
-        </p>
-
         <ul className="mt-14 grid gap-px border border-noche-borde bg-noche-borde sm:grid-cols-2 lg:grid-cols-3">
           {variantes.map((variante) => (
             <li key={variante.slug} className="group flex flex-col bg-noche">

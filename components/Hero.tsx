@@ -22,14 +22,15 @@ export function Hero({ destacada, cantidadModelos }: { destacada: Variante; cant
             <br />
             Geométrica<span className="text-luz">.</span>
             <span className="mt-4 block font-display text-xl tracking-tight text-humo sm:text-2xl">
-              La trama se enciende.
+              Luz cálida, lista para enchufar.
             </span>
           </h1>
 
           <p className="mt-6 max-w-md text-lg leading-relaxed text-humo">
-            Apagada es una pieza geométrica. Encendida, la luz atraviesa la pantalla y el dibujo
-            toma cuerpo. {cantidadModelos} tramas, todas al mismo precio: elegís por cuál te gusta
-            más, no por cuánto sale.
+            Lámpara de mesa con trípode para el escritorio, la mesa de luz o cualquier rincón que
+            pida luz cálida. {cantidadModelos} diseños de pantalla: elegís el que mejor va con tu
+            decoración. Incluye cable transparente de 1,5 m con interruptor y enchufe de 220 V —
+            la enchufás y ya está.
           </p>
 
           <div className="mt-10">
