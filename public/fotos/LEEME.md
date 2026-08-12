@@ -23,8 +23,8 @@ permitir las URLs de Unsplash.
 
 ## Qué conviene fotografiar
 
-Cada modelo se elige por la sombra que proyecta, así que la foto que más vende es
-**la lámpara encendida en un ambiente oscuro, mostrando el dibujo sobre la pared**.
+Cada modelo se elige por cómo se ve encendido, así que la foto que más vende es
+**la lámpara encendida en penumbra, con la trama de la pantalla bien legible**.
 
 - Formato cuadrado (1:1), mínimo 1200 × 1200 px: la grilla y las páginas de detalle usan cuadrado.
 - Misma distancia, mismo fondo y misma luz en las seis. La comparación entre modelos es el

@@ -12,7 +12,9 @@ export function Hero({ destacada, cantidadModelos }: { destacada: Variante; cant
       <div className="contenedor relative grid items-center gap-12 py-20 md:grid-cols-2 md:py-28">
         <div>
           {/* El subtítulo del h1 habla de lo que hace la lámpara, no de cómo está fabricada:
-              al que compra le importa la luz sobre la pared, no la impresora.
+              al que compra le importa cómo se ve encendida, no la impresora.
+              Ojo con el copy de toda la página: la lámpara NO proyecta su trama sobre la pared.
+              La trama es la pantalla misma, y se lee cuando la luz la atraviesa desde adentro.
               La localidad no se muestra acá; sigue en el pie y en el JSON-LD de LocalBusiness,
               que es lo que lee Google para el SEO local. */}
           <h1 className="font-display text-5xl leading-[0.95] tracking-tight text-hueso sm:text-6xl lg:text-7xl">
@@ -20,13 +22,14 @@ export function Hero({ destacada, cantidadModelos }: { destacada: Variante; cant
             <br />
             Geométrica<span className="text-luz">.</span>
             <span className="mt-4 block font-display text-xl tracking-tight text-humo sm:text-2xl">
-              Luz que dibuja.
+              La trama se enciende.
             </span>
           </h1>
 
           <p className="mt-6 max-w-md text-lg leading-relaxed text-humo">
-            Una lámpara de mesa que proyecta su propia trama sobre la pared. {cantidadModelos}{' '}
-            diseños de pantalla, el mismo precio: elegís por cómo cae la luz, no por cuánto sale.
+            Apagada es una pieza geométrica. Encendida, la luz atraviesa la pantalla y el dibujo
+            toma cuerpo. {cantidadModelos} tramas, todas al mismo precio: elegís por cuál te gusta
+            más, no por cuánto sale.
           </p>
 
           <div className="mt-10">

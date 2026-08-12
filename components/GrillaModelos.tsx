@@ -13,8 +13,8 @@ export function GrillaModelos({ variantes }: { variantes: Variante[] }) {
           Misma lámpara, seis tramas distintas.
         </h2>
         <p className="mt-4 max-w-xl leading-relaxed text-humo">
-          Lo único que cambia es la pantalla, y con ella la sombra que proyecta. Tocá cualquiera
-          para ver el detalle.
+          Lo único que cambia es la pantalla, y con ella el dibujo que aparece al encenderla. Tocá
+          cualquiera para ver el detalle.
         </p>
 
         <ul className="mt-14 grid gap-px border border-noche-borde bg-noche-borde sm:grid-cols-2 lg:grid-cols-3">

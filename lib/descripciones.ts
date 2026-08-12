@@ -11,26 +11,26 @@
 
 export const descripcionesPorSlug: Record<string, string> = {
   'hexagonal-grande':
-    'Panal de abeja a gran escala. Los hexágonos anchos dejan pasar la luz en bloques amplios y ' +
-    'proyectan una retícula limpia sobre la pared. Es la más luminosa de las seis y la que mejor ' +
-    'funciona como luz de living.',
+    'Panal de abeja a gran escala. Los hexágonos anchos dejan pasar la luz en bloques amplios y la ' +
+    'retícula se lee nítida desde el otro lado de la habitación. Es la más luminosa de las seis y ' +
+    'la que mejor funciona como luz de living.',
 
   'hexagonal-pequeno':
-    'El mismo panal, con la trama cerrada. Al ser hexágonos chicos la luz sale más tamizada y el ' +
-    'reflejo en la pared es un punteado fino, casi textil. Va bien en una mesa de luz, donde querés ' +
+    'El mismo panal, con la trama cerrada. Al ser hexágonos chicos la luz sale tamizada y la ' +
+    'pantalla se vuelve un punteado fino, casi textil. Va bien en una mesa de luz, donde querés ' +
     'luz sin encandilarte.',
 
   'triangulo-desplazado':
-    'Triángulos que no se alinean: cada hilera está corrida respecto de la anterior. La sombra que ' +
-    'proyecta cambia según desde dónde la mires y nunca repite el mismo dibujo dos veces.',
+    'Triángulos que no se alinean: cada hilera está corrida respecto de la anterior. Como el dibujo ' +
+    'no cierra nunca del todo, cambia según desde dónde la mires: no hay dos ángulos iguales.',
 
   voronoi:
     'Celdas irregulares, del tipo que arma la naturaleza en el ala de una libélula. Ninguna cara se ' +
     'repite y la luz sale en fragmentos orgánicos. Es la más escultórica del conjunto.',
 
   'diamante-grande':
-    'Rombos amplios en diagonal. Proyecta una malla romboidal marcada y tiene un aire art déco. La ' +
-    'opción más gráfica si querés que la lámpara se note también apagada.',
+    'Rombos amplios en diagonal, con un aire art déco. La malla es tan marcada que la lámpara se ' +
+    'sostiene como objeto incluso apagada: es la más gráfica de las seis.',
 
   'diamante-horizontal':
     'El rombo estirado a lo ancho. Las líneas horizontales alargan visualmente la pantalla y tiran la ' +
