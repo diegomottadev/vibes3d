@@ -6,9 +6,11 @@ import { ficha } from './seo';
  * Viven acá y no en el componente porque se usan dos veces: para el acordeón que ve la persona
  * y para el JSON-LD que lee Google. Una sola fuente, así nunca se desincronizan.
  *
- * PENDIENTE de confirmar con Francisco antes de agregarlas:
- *  - ¿Hace envíos a todo el país? ¿Con qué correo? ¿Hay retiro en persona?
- *  - ¿Cuánto tarda en imprimirse y entregarse?
+ * PENDIENTE de confirmar con Francisco:
+ *  - ¿Hay retiro en persona en Jardín América? Sería una pregunta aparte.
+ *  - ¿Cuánto tarda en imprimirse y entregarse? Hoy tanto "¿Hacés envíos?" como "¿Tenés stock?"
+ *    esquivan el plazo mandándolo a WhatsApp. Es la objeción más cara de no responder: un plazo
+ *    concreto acá evita la consulta previa al pedido.
  */
 export const preguntas = [
   {
@@ -41,6 +43,12 @@ export const preguntas = [
     respuesta:
       'Elegís el modelo y la cantidad, dejás tu nombre y tu ciudad, y el sitio te abre WhatsApp ' +
       'con el pedido ya escrito. A partir de ahí coordinamos el pago y la entrega por chat.',
+  },
+  {
+    pregunta: '¿Hacés envíos?',
+    respuesta:
+      'Sí, por Correo Argentino. Al coordinar el pedido por WhatsApp te confirmo el costo del ' +
+      'envío según tu ciudad y cuándo sale.',
   },
   {
     pregunta: '¿Tenés stock?',
