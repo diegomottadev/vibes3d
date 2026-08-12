@@ -48,12 +48,9 @@ comandos de build.
 
 ### 1. Variable de entorno (obligatoria)
 
-| Variable | Ejemplo | Dónde |
+| Variable | Valor | Dónde |
 | --- | --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | `https://vibes3d.vercel.app` | Production, Preview y Development |
-
-Sin dominio final todavía, poner la URL que asigna Vercel (`https://<proyecto>.vercel.app`) y
-cambiarla cuando esté el dominio propio.
+| `NEXT_PUBLIC_SITE_URL` | `https://vibes3d.lat` | Production, Preview y Development |
 
 **Sin barra al final** y **sin `localhost`**: si falta o apunta a una máquina local, el build
 **falla a propósito** (`lib/site.ts`) con este error:
@@ -76,10 +73,24 @@ silenciosa. Mejor que reviente el deploy.
 3. Agregar `NEXT_PUBLIC_SITE_URL` en los tres entornos.
 4. **Deploy**.
 
-### 3. Al conectar el dominio propio
+### 3. Conectar el dominio `vibes3d.lat`
 
-Cambiar `NEXT_PUBLIC_SITE_URL` al dominio nuevo y **redeployar**: los canonical, el sitemap y las
-imágenes de Open Graph se hornean en el build, así que no se actualizan solos.
+En **Settings → Domains** agregar `vibes3d.lat`. Vercel indica qué cargar en el panel del
+registrador, que suele ser:
+
+| Registro | Nombre | Valor |
+| --- | --- | --- |
+| `A` | `@` | `76.76.21.21` |
+| `CNAME` | `www` | `cname.vercel-dns.com` |
+
+**Usar los valores que muestre Vercel, no estos**: los cambia cada tanto. El certificado HTTPS lo
+emite Vercel solo cuando el DNS propaga (minutos a algunas horas).
+
+Conviene dejar `www` redirigiendo a la raíz (o al revés), pero **una sola** de las dos como
+principal: si las dos sirven el sitio, son contenido duplicado para Google.
+
+> Si alguna vez cambia el dominio, hay que actualizar `NEXT_PUBLIC_SITE_URL` **y redeployar**: los
+> canonical, el sitemap y las imágenes de Open Graph se hornean en el build, no se actualizan solos.
 
 ### Cada cuánto se actualizan los precios
 
@@ -200,9 +211,6 @@ public/fotos/             acá van las fotos reales (ver LEEME.md)
    `lib/descripciones.ts`: **hay que leerlo y corregirlo**, y lo ideal es después pasarlo a la
    columna `descripcion` de la planilla y borrar ese archivo.
 
-2. **Dominio.** Falta definirlo y cargarlo en `NEXT_PUBLIC_SITE_URL` (ver *Deploy en Vercel*).
-   Mientras tanto sirve la URL `.vercel.app`.
-
-3. **Datos sin confirmar para las preguntas frecuentes** (están listados como comentario en
+2. **Datos sin confirmar para las preguntas frecuentes** (están listados como comentario en
    `components/Preguntas.tsx`): si el foco LED viene incluido, cómo son los envíos y cuánto tarda
    la entrega.
