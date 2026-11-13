@@ -36,11 +36,7 @@ export function GaleriaProducto({ variante }: { variante: Variante }) {
             fill
             priority={indiceActivo === 0}
             sizes="(max-width: 1024px) 100vw, 55vw"
-            className={
-              indiceActivo === 0 && !variante.esMaceta
-                ? 'object-cover'
-                : 'object-contain'
-            }
+            className={indiceActivo === 0 ? 'object-cover' : 'object-contain'}
           />
         )}
       </div>
@@ -94,7 +90,7 @@ export function GaleriaProducto({ variante }: { variante: Variante }) {
                       sizes="96px"
                       loading="eager"
                       className={
-                        idx === 0 && !variante.esMaceta
+                        idx === 0
                           ? 'object-cover'
                           : !variante.esAstronauta && !variante.esMiniLuna && !variante.esMaceta
                             ? 'object-cover'

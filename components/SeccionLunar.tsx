@@ -69,7 +69,7 @@ export function SeccionLunar({
                     fill
                     sizes="(max-width: 1024px) 100vw, 55vw"
                     className={
-                      indiceActivo === 0 && !lunar.esMaceta
+                      indiceActivo === 0
                         ? 'object-cover transition duration-500 group-hover:scale-105'
                         : 'object-contain transition duration-500 group-hover:scale-105'
                     }
@@ -124,7 +124,7 @@ export function SeccionLunar({
                           fill
                           sizes="(max-width: 768px) 20vw, 12vw"
                           className={
-                            idx === 0 && !lunar.esMaceta
+                            idx === 0
                               ? 'object-cover'
                               : !lunar.esAstronauta && !lunar.esMiniLuna && !lunar.esMaceta
                                 ? 'object-cover'

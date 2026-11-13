@@ -123,8 +123,8 @@ const GALERIA_MINI_LUNA_EXTRA: MediaGaleria[] = [
 const GALERIA_MACETA_EXTRA: MediaGaleria[] = [
   {
     tipo: 'imagen',
-    url: '/fotos/maceta-animada/img_6364.webp',
-    etiqueta: 'Conjunto de macetas en borde',
+    url: '/fotos/maceta-animada/img_6357.webp',
+    etiqueta: 'Primer plano con bracitos y patitas',
   },
   {
     tipo: 'imagen',
