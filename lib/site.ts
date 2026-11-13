@@ -32,8 +32,8 @@ function urlDelSitio(): string {
 }
 
 export const sitio = {
-  marca: 'Vibes Impresiones 3D',
-  tagline: 'Impresión 3D en Argentina',
+  marca: 'Vibes',
+  tagline: 'Iluminación decorativa en Argentina',
 
   /**
    * URL canónica. Se toma de la variable de entorno para no hardcodear un dominio

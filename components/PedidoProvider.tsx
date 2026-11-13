@@ -11,7 +11,7 @@ import {
 } from 'react';
 
 import type { Variante } from '@/lib/catalogo';
-import { ahorro, precioTotal } from '@/lib/precios';
+import { calcularTotalesPedido } from '@/lib/precios';
 import { DialogoPedido } from './DialogoPedido';
 
 /** Una línea del pedido: qué modelo y cuántos. */
@@ -125,17 +125,10 @@ export function PedidoProvider({
     [items, variantes],
   );
 
-  const unidades = useMemo(() => lineas.reduce((suma, l) => suma + l.cantidad, 0), [lineas]);
-
-  // El descuento se calcula sobre el total de lámparas, sin importar de qué trama sean:
-  // el costo de producción es el mismo y así se premia armar un pedido variado.
-  //
-  // Esto asume que las 6 variantes valen igual, que es lo que dice la planilla hoy. Si alguna
-  // vez tienen precios distintos, la tabla de lib/precios.ts deja de alcanzar y hay que
-  // repensar cómo se reparte el descuento.
-  const precioBase = variantes[0]?.precio ?? 0;
-  const total = useMemo(() => precioTotal(precioBase, unidades), [precioBase, unidades]);
-  const descuento = useMemo(() => ahorro(precioBase, unidades), [precioBase, unidades]);
+  const { unidades, total, descuento } = useMemo(
+    () => calcularTotalesPedido(lineas),
+    [lineas],
+  );
 
   const valor = useMemo(
     () => ({

@@ -1,29 +1,83 @@
 import type { Variante } from './catalogo';
 import { sitio } from './site';
 
-/** Ficha técnica común a las 6 variantes. Sale del pedido, no de la planilla. */
-export const ficha = {
+export type DatosFicha = {
+  materiales: string;
+  materialesCorto: string;
+  iluminacion: string;
+  cable: string;
+  soporte: string;
+  dimensionesTexto: string;
+  anchoMm: number;
+  altoMm: number;
+  disponibilidad: string;
+};
+
+/** Ficha técnica común a las 6 variantes de la Lámpara Geométrica. */
+export const ficha: DatosFicha = {
   materiales:
     'Su estructura con soporte de trípode está elaborada en PLA, un material resistente y de ' +
     'origen biológico, mientras que la pantalla está fabricada en PETG, ofreciendo una mayor ' +
     'resistencia a los impactos, al calor y al uso diario.',
-  /** Versión corta para los lugares donde no entra el párrafo completo. */
   materialesCorto: 'Estructura en PLA, pantalla en PETG',
   iluminacion: 'Foco LED 6V de luz cálida',
   cable: 'Cable de 1,5 m con interruptor y enchufe macho para 220V',
+  soporte: 'Trípode incluido',
+  dimensionesTexto: '130 mm × 230 mm',
   anchoMm: 130,
   altoMm: 230,
-} as const;
+  disponibilidad: 'Stock permanente de los seis modelos',
+};
+
+/** Ficha técnica de la Lámpara Lunar (18 cm). */
+export const fichaLunar: DatosFicha = {
+  materiales:
+    'Esfera con relieve texturado inspirado en la superficie real de la Luna y soporte ' +
+    'curvo orgánico de alta resistencia.',
+  materialesCorto: 'Esfera con relieve lunar y base curva',
+  iluminacion: 'Luz LED 220 V - 6 W (tono blanco cálido)',
+  cable: 'Cable armado blanco de 1,5 m con interruptor y ficha macho para 220 V',
+  soporte: 'Base curva de apoyo incluida',
+  dimensionesTexto: '18 cm (180 mm) de diámetro',
+  anchoMm: 180,
+  altoMm: 180,
+  disponibilidad: 'Stock permanente — Lista para enchufar y usar',
+};
+
+/** Ficha técnica de la Lámpara Astronauta (33 cm). */
+export const fichaAstronauta: DatosFicha = {
+  materiales:
+    'Esfera de 18 cm con relieve texturado de la superficie real de la Luna sostenida por una ' +
+    'figura de astronauta de 15 cm de alta definición y resistencia.',
+  materialesCorto: 'Luna de 18 cm con relieve + base Astronauta de 15 cm',
+  iluminacion: 'Luz LED 220 V - 6 W (tono blanco cálido)',
+  cable: 'Cable blanco de 1,5 m con enchufe e interruptor incluidos para 220 V',
+  soporte: 'Figura de Astronauta de 15 cm incluida',
+  dimensionesTexto: '33 cm de altura total (Luna 18 cm + Astronauta 15 cm)',
+  anchoMm: 180,
+  altoMm: 330,
+  disponibilidad: 'Stock permanente — Lista para enchufar y disfrutar',
+};
+
+export function obtenerFichaDeVariante(
+  variante?: Pick<Variante, 'esLunar' | 'esAstronauta' | 'tipoProducto'>,
+): DatosFicha {
+  if (variante?.esAstronauta || variante?.tipoProducto === 'astronauta') {
+    return fichaAstronauta;
+  }
+  if (variante?.esLunar || variante?.tipoProducto === 'lunar') {
+    return fichaLunar;
+  }
+  return ficha;
+}
 
 export function urlDeVariante(slug: string): string {
   return `${sitio.url}/lampara/${slug}`;
 }
 
-/**
- * JSON-LD de Product + Offer. Es lo que hace que Google pueda mostrar el precio
- * directamente en el resultado de búsqueda.
- */
 export function jsonLdProducto(variante: Variante) {
+  const datosFicha = obtenerFichaDeVariante(variante);
+
   return {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -38,12 +92,12 @@ export function jsonLdProducto(variante: Variante) {
     category: variante.categoria,
     width: {
       '@type': 'QuantitativeValue',
-      value: ficha.anchoMm,
+      value: datosFicha.anchoMm,
       unitCode: 'MMT',
     },
     height: {
       '@type': 'QuantitativeValue',
-      value: ficha.altoMm,
+      value: datosFicha.altoMm,
       unitCode: 'MMT',
     },
     offers: {
@@ -51,7 +105,6 @@ export function jsonLdProducto(variante: Variante) {
       url: urlDeVariante(variante.slug),
       price: variante.precio,
       priceCurrency: sitio.moneda,
-      // Hay stock permanente de los seis modelos, así que siempre hay disponibilidad.
       availability: 'https://schema.org/InStock',
       itemCondition: 'https://schema.org/NewCondition',
       seller: {
@@ -62,10 +115,6 @@ export function jsonLdProducto(variante: Variante) {
   };
 }
 
-/**
- * JSON-LD de LocalBusiness. Solo se emite cuando la localidad está confirmada:
- * un dato de dirección inventado es peor que no tener el marcado.
- */
 export function jsonLdNegocio() {
   if (!sitio.localidad.confirmada) return null;
 
@@ -73,7 +122,7 @@ export function jsonLdNegocio() {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
     name: sitio.marca,
-    description: `${sitio.tagline}. Lámparas geométricas de mesa en seis diseños de pantalla.`,
+    description: `${sitio.tagline}. Lámpara Astronauta, Lámpara Lunar y Lámparas Geométricas de mesa.`,
     url: sitio.url,
     telephone: sitio.whatsappVisible,
     address: {
@@ -86,8 +135,13 @@ export function jsonLdNegocio() {
   };
 }
 
-/** Migas de pan para las páginas de variante. */
 export function jsonLdMigas(variante: Variante) {
+  const anclaSeccion = variante.esAstronauta
+    ? '#astronauta'
+    : variante.esLunar
+      ? '#lunar'
+      : '#modelos';
+
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -102,7 +156,7 @@ export function jsonLdMigas(variante: Variante) {
         '@type': 'ListItem',
         position: 2,
         name: variante.producto,
-        item: `${sitio.url}/#modelos`,
+        item: `${sitio.url}/${anclaSeccion}`,
       },
       {
         '@type': 'ListItem',

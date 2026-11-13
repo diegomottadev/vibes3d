@@ -1,48 +1,47 @@
 /**
- * BORRADOR PARA REVISIÓN — Francisco tiene que aprobar o reescribir estos textos.
- *
- * Por qué existe este archivo: en la planilla las 6 variantes comparten exactamente la misma
- * descripción. Como cada variante tiene su propia URL indexable, ese texto repetido es contenido
- * duplicado y Google terminaría indexando una sola de las seis páginas.
- *
- * Cuando estos textos estén aprobados, lo ideal es pasarlos a la columna `descripcion` de la
- * planilla y borrar este archivo: la fuente de verdad debería ser una sola.
+ * Descripciones por modelo de la Lámpara Geométrica.
+ * Enfocadas en la iluminación cálida y el uso en cada ambiente del hogar,
+ * manteniendo textos únicos por URL para SEO.
  */
 
 export const descripcionesPorSlug: Record<string, string> = {
   'hexagonal-grande':
-    'Panal de abeja a gran escala. Los hexágonos anchos dejan pasar la luz en bloques amplios y la ' +
-    'retícula se lee nítida desde el otro lado de la habitación. Es la más luminosa de las seis y ' +
-    'la que mejor funciona como luz de living.',
+    'Lámpara decorativa de mesa con pantalla de diseño hexagonal amplio y soporte de trípode. ' +
+    'Brinda una iluminación cálida y abierta, ideal para dar calidez a livings, escritorios o ' +
+    'recibidores.',
 
   'hexagonal-pequeno':
-    'El mismo panal, con la trama cerrada. Al ser hexágonos chicos la luz sale tamizada y la ' +
-    'pantalla se vuelve un punteado fino, casi textil. Va bien en una mesa de luz, donde querés ' +
-    'luz sin encandilarte.',
+    'Lámpara de mesa con pantalla de patrón hexagonal fino que suaviza la salida de luz sin ' +
+    'encandilar. Ideal para mesas de luz, dormitorios o rincones de lectura donde buscás un ' +
+    'ambiente relajado.',
 
   'triangulo-desplazado':
-    'Triángulos que no se alinean: cada hilera está corrida respecto de la anterior. Como el dibujo ' +
-    'no cierra nunca del todo, cambia según desde dónde la mires: no hay dos ángulos iguales.',
+    'Lámpara decorativa de mesa con pantalla facetada en relieve triangular y luz cálida. ' +
+    'Aporta un diseño moderno y distintivo tanto encendida como apagada, perfecta para ' +
+    'escritorios, repisas o livings.',
 
   voronoi:
-    'Celdas irregulares, del tipo que arma la naturaleza en el ala de una libélula. Ninguna cara se ' +
-    'repite y la luz sale en fragmentos orgánicos. Es la más escultórica del conjunto.',
+    'Lámpara de mesa con pantalla de diseño orgánico y soporte de trípode. Difunde una luz ' +
+    'cálida y envolvente, ideal para destacar en dormitorios, livings modernos o como regalo ' +
+    'especial.',
 
   'diamante-grande':
-    'Rombos amplios en diagonal, con un aire art déco. La malla es tan marcada que la lámpara se ' +
-    'sostiene como objeto incluso apagada: es la más gráfica de las seis.',
+    'Lámpara decorativa de mesa con pantalla de relieve en rombos amplios y luz de tono cálido. ' +
+    'Un punto focal elegante para mesas auxiliares, livings, escritorios o dormitorios.',
 
   'diamante-horizontal':
-    'El rombo estirado a lo ancho. Las líneas horizontales alargan visualmente la pantalla y tiran la ' +
-    'luz hacia los costados en vez de hacia arriba. Buena para iluminar una repisa o un rincón bajo.',
+    'Lámpara de mesa con pantalla de diseño apaisado que distribuye la luz cálida de forma ' +
+    'pareja hacia todo el entorno. Ideal para repisas, mesas de luz, cómodas o espacios de trabajo.',
 };
 
 /** Frases cortas para los `alt` de las imágenes y los títulos de las tarjetas. */
 export const patronesPorSlug: Record<string, string> = {
-  'hexagonal-grande': 'trama de hexágonos grandes',
-  'hexagonal-pequeno': 'trama de hexágonos pequeños',
-  'triangulo-desplazado': 'triángulos desplazados',
-  voronoi: 'celdas Voronoi irregulares',
-  'diamante-grande': 'rombos grandes en diagonal',
-  'diamante-horizontal': 'rombos horizontales alargados',
+  'hexagonal-grande': 'pantalla hexagonal grande',
+  'hexagonal-pequeno': 'pantalla hexagonal pequeña',
+  'triangulo-desplazado': 'pantalla de triángulos desplazados',
+  voronoi: 'pantalla de diseño Voronoi',
+  'diamante-grande': 'pantalla diamante grande',
+  'diamante-horizontal': 'pantalla diamante horizontal',
+  'luna-18-cm-blanco-calido': 'relieve lunar y luz blanco cálido',
+  'lampara-astronauta': 'astronauta sosteniendo la Luna iluminada',
 };

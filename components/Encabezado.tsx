@@ -16,23 +16,24 @@ export function Encabezado() {
 
         <nav className="flex items-center gap-6">
           <Link
+            href="/#astronauta"
+            className="etiqueta hidden transition-colors hover:text-luz sm:block"
+          >
+            Astronauta
+          </Link>
+          <Link
+            href="/#lunar"
+            className="etiqueta hidden transition-colors hover:text-luz sm:block"
+          >
+            Lunar
+          </Link>
+          <Link
             href="/#modelos"
             className="etiqueta hidden transition-colors hover:text-hueso sm:block"
           >
-            Modelos
-          </Link>
-          <Link
-            href="/#ficha"
-            className="etiqueta hidden transition-colors hover:text-hueso sm:block"
-          >
-            Ficha técnica
+            Geométricas
           </Link>
 
-          {/*
-            Hasta que se lee el pedido guardado no se sabe cuántas lámparas hay. Se muestra el
-            estado vacío para que el servidor y el cliente rendericen lo mismo, y el contador
-            aparece apenas hidrata.
-          */}
           {hidratado && unidades > 0 ? (
             <button
               type="button"
@@ -50,10 +51,10 @@ export function Encabezado() {
             </button>
           ) : (
             <Link
-              href="/#modelos"
+              href="/#astronauta"
               className="bg-luz px-4 py-2 font-display text-xs uppercase tracking-etiqueta text-noche transition-colors hover:bg-luz-calida"
             >
-              Ver modelos
+              Ver catálogo
             </Link>
           )}
         </nav>

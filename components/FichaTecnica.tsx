@@ -1,20 +1,25 @@
-import { ficha } from '@/lib/seo';
+import type { Variante } from '@/lib/catalogo';
+import { obtenerFichaDeVariante } from '@/lib/seo';
 
-const filas = [
-  { dato: 'Materiales', valor: ficha.materiales },
-  { dato: 'Dimensiones', valor: `${ficha.anchoMm} mm × ${ficha.altoMm} mm` },
-  { dato: 'Iluminación', valor: ficha.iluminacion },
-  { dato: 'Conexión', valor: ficha.cable },
-  { dato: 'Soporte', valor: 'Trípode incluido' },
-  { dato: 'Disponibilidad', valor: 'Stock permanente de los seis modelos' },
-];
+export function FichaTecnica({ variante }: { variante?: Variante }) {
+  const datos = obtenerFichaDeVariante(variante);
 
-export function FichaTecnica() {
+  const filas = [
+    { dato: 'Materiales', valor: datos.materiales },
+    { dato: 'Dimensiones', valor: datos.dimensionesTexto },
+    { dato: 'Iluminación', valor: datos.iluminacion },
+    { dato: 'Conexión', valor: datos.cable },
+    { dato: 'Soporte', valor: datos.soporte },
+    { dato: 'Disponibilidad', valor: datos.disponibilidad },
+  ];
+
   return (
     <section id="ficha" className="border-b border-noche-borde py-20 md:py-28">
       <div className="contenedor grid gap-12 md:grid-cols-[1fr_1.2fr]">
         <div>
-          <p className="etiqueta">Ficha técnica</p>
+          <p className="etiqueta">
+            Ficha técnica {variante ? `· ${variante.producto}` : '· Lámpara Geométrica'}
+          </p>
           <h2 className="mt-4 font-display text-4xl leading-tight tracking-tight text-hueso">
             Lo que viene en la caja.
           </h2>

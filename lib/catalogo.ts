@@ -4,6 +4,7 @@ import path from 'node:path';
 import Papa from 'papaparse';
 
 import { descripcionesPorSlug, patronesPorSlug } from './descripciones';
+import { detectarTipoProducto, type TipoProducto } from './precios';
 import catalogoDeRespaldo from '../data/catalogo-respaldo.json';
 
 const SHEET_ID = '1aZx85ZxjPE1c7aqFjKngvVbWPIa6EGQ8jj41F_vWgek';
@@ -22,32 +23,82 @@ type FilaCSV = {
   imagen_url: string;
   descripcion: string;
   stock: string;
+  caracteristicas?: string;
   personalizable: string;
   destacado: string;
+};
+
+export type MediaGaleria = {
+  tipo: 'imagen' | 'video';
+  url: string;
+  etiqueta: string;
 };
 
 export type Variante = {
   id: string;
   producto: string;
-  /** Como figura en la planilla: "Pantalla Hexagonal Grande" */
   variante: string;
-  /** Sin el prefijo "Pantalla": "Hexagonal Grande" */
   nombreCorto: string;
-  /** Para la URL: "hexagonal-grande" */
   slug: string;
   categoria: string;
   precio: number;
   imagen: string;
   descripcion: string;
-  /** true mientras el texto salga de lib/descripciones.ts y no de la planilla. */
   descripcionEsBorrador: boolean;
   patron: string;
   destacado: boolean;
+  tipoProducto: TipoProducto;
+  esLunar: boolean;
+  esAstronauta: boolean;
+  caracteristicas: string[];
+  galeria: MediaGaleria[];
 };
 
-// Las columnas `stock` y `personalizable` se leen del CSV pero no se exponen ni se renderizan:
-// hay stock permanente de los seis y no hay personalización. Se dejan documentadas acá para que quede claro
-// que la omisión es deliberada y no un olvido.
+const GALERIA_LUNAR_EXTRA: MediaGaleria[] = [
+  {
+    tipo: 'imagen',
+    url: '/fotos/luna/real-escritorio.webp',
+    etiqueta: 'Foto real en escritorio',
+  },
+  {
+    tipo: 'imagen',
+    url: '/fotos/luna/real-ambiente.webp',
+    etiqueta: 'Luz cálida en oscuridad',
+  },
+  {
+    tipo: 'imagen',
+    url: '/fotos/luna/real-textura.webp',
+    etiqueta: 'Detalle del relieve lunar',
+  },
+  {
+    tipo: 'imagen',
+    url: '/fotos/luna/real-comparativa.webp',
+    etiqueta: 'Terminación y base curva',
+  },
+  {
+    tipo: 'video',
+    url: '/fotos/luna/video-calida.mp4',
+    etiqueta: 'Video: encendida en vivo',
+  },
+];
+
+const GALERIA_ASTRONAUTA_EXTRA: MediaGaleria[] = [
+  {
+    tipo: 'imagen',
+    url: '/fotos/astronauta/foto-completa-v2.webp',
+    etiqueta: 'Foto real completa',
+  },
+  {
+    tipo: 'imagen',
+    url: '/fotos/astronauta/foto-detalle-v2.webp',
+    etiqueta: 'Detalle del astronauta y la Luna',
+  },
+  {
+    tipo: 'video',
+    url: '/fotos/astronauta/video-astronauta.mp4',
+    etiqueta: 'Video: encendida en vivo',
+  },
+];
 
 function sinAcentos(texto: string): string {
   return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -68,10 +119,30 @@ function nombreCortoDeVariante(variante: string): string {
   return variante.replace(/^Pantalla\s+/i, '').trim();
 }
 
-/**
- * Acepta "34999", "34.999", "$34.999" y "34999,50".
- * En es-AR el punto es separador de miles y la coma es decimal.
- */
+function normalizarNombreProducto(nombre: string): string {
+  const limpio = nombre.trim();
+  const base = sinAcentos(limpio).toLowerCase();
+  if (/^lampara lunar$/.test(base)) {
+    return 'Lámpara Lunar';
+  }
+  if (/^lampara astronautr?a$/.test(base)) {
+    return 'Lámpara Astronauta';
+  }
+  return limpio;
+}
+
+function parsearCaracteristicas(texto?: string): string[] {
+  if (!texto) return [];
+  return texto
+    .split(/\r?\n/)
+    .map((linea) =>
+      linea
+        .replace(/^[\p{Emoji}\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F\u200D\u2640-\u2642\s•-]+/gu, '')
+        .trim(),
+    )
+    .filter((linea) => linea.length > 0 && !/^caracter[ií]sticas:?$/i.test(linea));
+}
+
 function parsearPrecio(valor: string): number {
   const limpio = String(valor ?? '')
     .replace(/[^\d,.-]/g, '')
@@ -84,21 +155,12 @@ function parsearPrecio(valor: string): number {
 const CARPETA_FOTOS = path.join(process.cwd(), 'public', 'fotos');
 const EXTENSIONES_FOTO = ['.webp', '.avif', '.jpg', '.jpeg', '.png'];
 
-/**
- * Si en public/fotos hay una imagen para este modelo, esa le gana a la `imagen_url` de la planilla.
- * Así se cargan las fotos reales sin tocar la planilla, y mientras falte alguna esa variante sigue
- * mostrando lo que diga el CSV.
- *
- * El nombre del archivo se compara normalizado, así que `hexagonal-pequeño.webp`,
- * `Hexagonal Pequeno.WEBP` y `hexagonal-pequeno.webp` valen todos: nadie tiene que acordarse de
- * escribir el slug exacto al guardar una foto.
- */
 function fotoLocal(slug: string): string | null {
   let archivos: string[];
   try {
     archivos = fs.readdirSync(CARPETA_FOTOS);
   } catch {
-    return null; // todavía no existe la carpeta
+    return null;
   }
 
   const buscado = normalizarNombreArchivo(slug);
@@ -109,7 +171,6 @@ function fotoLocal(slug: string): string | null {
 
     const base = path.basename(archivo, path.extname(archivo));
     if (normalizarNombreArchivo(base) === buscado) {
-      // encodeURIComponent por si el archivo tiene ñ, tildes o espacios en el nombre.
       return `/fotos/${encodeURIComponent(archivo)}`;
     }
   }
@@ -117,7 +178,6 @@ function fotoLocal(slug: string): string | null {
   return null;
 }
 
-/** "Hexagonal Pequeño" y "hexagonal-pequeno" colapsan al mismo valor. */
 function normalizarNombreArchivo(nombre: string): string {
   return sinAcentos(nombre)
     .toLowerCase()
@@ -130,24 +190,59 @@ function esVerdadero(valor: string): boolean {
 }
 
 function filaAVariante(fila: FilaCSV): Variante {
-  const variante = (fila.variante ?? '').trim();
-  const slug = slugDeVariante(variante);
+  const producto = normalizarNombreProducto(fila.nombre_producto ?? '');
+  const tipoProducto = detectarTipoProducto(producto || fila.variante);
+  const esLunar = tipoProducto === 'lunar';
+  const esAstronauta = tipoProducto === 'astronauta';
+
+  const varianteCruda = (fila.variante ?? '').trim();
+  const variante =
+    varianteCruda ||
+    (esAstronauta ? 'Luna 18 cm + Astronauta 15 cm | 33 cm' : producto);
+
+  const slug = esAstronauta && !varianteCruda ? 'lampara-astronauta' : slugDeVariante(variante);
   const descripcionPropia = descripcionesPorSlug[slug];
+
+  const fallbackFoto = esAstronauta
+    ? '/fotos/lampara-astronauta.webp'
+    : '/fotos/luna-18-cm-blanco-calido.webp';
+
+  const imagenPrincipal =
+    fotoLocal(slug) ?? ((fila.imagen_url ?? '').trim() || fallbackFoto);
+
+  const galeriaExtra = esAstronauta
+    ? GALERIA_ASTRONAUTA_EXTRA
+    : esLunar
+      ? GALERIA_LUNAR_EXTRA
+      : [];
+
+  const galeria: MediaGaleria[] = [
+    {
+      tipo: 'imagen',
+      url: imagenPrincipal,
+      etiqueta: nombreCortoDeVariante(variante),
+    },
+    ...galeriaExtra,
+  ];
 
   return {
     id: String(fila.id ?? '').trim(),
-    producto: (fila.nombre_producto ?? '').trim(),
+    producto,
     variante,
     nombreCorto: nombreCortoDeVariante(variante),
     slug,
     categoria: (fila.categoria ?? '').trim(),
     precio: parsearPrecio(fila.precio),
-    imagen: fotoLocal(slug) ?? (fila.imagen_url ?? '').trim(),
-    // Si algún día la planilla trae textos distintos por fila, esos ganan y el borrador se ignora.
+    imagen: imagenPrincipal,
     descripcion: descripcionPropia ?? (fila.descripcion ?? '').trim(),
     descripcionEsBorrador: Boolean(descripcionPropia),
     patron: patronesPorSlug[slug] ?? variante.toLowerCase(),
     destacado: esVerdadero(fila.destacado),
+    tipoProducto,
+    esLunar,
+    esAstronauta,
+    caracteristicas: parsearCaracteristicas(fila.caracteristicas),
+    galeria,
   };
 }
 
@@ -155,7 +250,7 @@ function parsearCSV(texto: string): Variante[] {
   const { data, errors } = Papa.parse<FilaCSV>(texto, {
     header: true,
     skipEmptyLines: true,
-    transformHeader: (h) => h.trim().toLowerCase(),
+    transformHeader: (h) => sinAcentos(h.trim().toLowerCase()),
   });
 
   if (errors.length > 0) {
@@ -163,18 +258,16 @@ function parsearCSV(texto: string): Variante[] {
   }
 
   return data
-    .filter((fila) => (fila.variante ?? '').trim().length > 0)
+    .filter(
+      (fila) =>
+        (fila.variante ?? '').trim().length > 0 ||
+        (fila.nombre_producto ?? '').trim().length > 0,
+    )
     .map(filaAVariante);
 }
 
 /**
- * Lee el catálogo desde la planilla en tiempo de build.
- *
- * `revalidate` hace que el sitio se regenere solo cada hora, así un cambio de precio en la
- * planilla llega sin tocar código ni redeployar a mano.
- *
- * Si la planilla no responde durante el build, cae al snapshot de data/catalogo-respaldo.json
- * para que un problema de red no rompa el deploy. El snapshot se actualiza con `npm run catalogo`.
+ * Lee el catálogo completo desde la planilla en tiempo de build.
  */
 export async function obtenerCatalogo(): Promise<Variante[]> {
   try {
@@ -203,25 +296,31 @@ export async function obtenerCatalogo(): Promise<Variante[]> {
   }
 }
 
+/** Las variantes de la Lámpara Geométrica (las 6 tramas de pantalla). */
+export async function obtenerVariantesGeometricas(): Promise<Variante[]> {
+  const catalogo = await obtenerCatalogo();
+  return catalogo.filter((v) => v.tipoProducto === 'geometrica');
+}
+
+/** La Lámpara Lunar (si está cargada en la planilla). */
+export async function obtenerVarianteLunar(): Promise<Variante | undefined> {
+  const catalogo = await obtenerCatalogo();
+  return catalogo.find((v) => v.tipoProducto === 'lunar');
+}
+
+/** La Lámpara Astronauta (si está cargada en la planilla). */
+export async function obtenerVarianteAstronauta(): Promise<Variante | undefined> {
+  const catalogo = await obtenerCatalogo();
+  return catalogo.find((v) => v.tipoProducto === 'astronauta');
+}
+
 export async function obtenerVariante(slug: string): Promise<Variante | undefined> {
   const catalogo = await obtenerCatalogo();
   return catalogo.find((variante) => variante.slug === slug);
 }
 
-/** La variante marcada como `destacado` en la planilla, o la primera si ninguna lo está. */
+/** La variante geométrica marcada como `destacado` en la planilla. */
 export async function obtenerDestacada(): Promise<Variante> {
-  const catalogo = await obtenerCatalogo();
-  return catalogo.find((variante) => variante.destacado) ?? catalogo[0];
-}
-
-/** Todas comparten producto y precio, así que alcanza con mirar la primera. */
-export async function obtenerFichaProducto() {
-  const catalogo = await obtenerCatalogo();
-  const primera = catalogo[0];
-
-  return {
-    nombre: primera?.producto ?? 'Lámpara Geométrica',
-    precio: primera?.precio ?? 0,
-    cantidadVariantes: catalogo.length,
-  };
+  const geometricas = await obtenerVariantesGeometricas();
+  return geometricas.find((variante) => variante.destacado) ?? geometricas[0];
 }

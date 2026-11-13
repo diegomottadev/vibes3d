@@ -14,7 +14,7 @@ export function LlamadaFinal() {
         </p>
 
         <div className="mt-10 flex justify-center">
-          <BotonPedido etiqueta="Elegir mi modelo" />
+          <BotonPedido href="/" etiqueta="Ver todas las lámparas" />
         </div>
       </div>
     </section>

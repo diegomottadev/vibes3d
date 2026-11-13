@@ -11,7 +11,11 @@ import { PedidoProvider } from '@/components/PedidoProvider';
 import { PiePagina } from '@/components/PiePagina';
 import { Proveedores } from '@/components/Proveedores';
 import { JsonLd } from '@/components/JsonLd';
-import { obtenerCatalogo, obtenerDestacada } from '@/lib/catalogo';
+import {
+  obtenerCatalogo,
+  obtenerDestacada,
+  obtenerVariantesGeometricas,
+} from '@/lib/catalogo';
 import { jsonLdNegocio } from '@/lib/seo';
 import { sitio } from '@/lib/site';
 
@@ -39,7 +43,7 @@ function descripcionDelSitio(cantidadModelos: number): string {
     : 'Argentina';
 
   return (
-    `Lámpara Geométrica de mesa, en ${cantidadModelos} diseños de pantalla. ` +
+    `Lámpara Geométrica de mesa en ${cantidadModelos} diseños de pantalla y Lámpara Lunar de 18 cm. ` +
     `Stock permanente en ${lugar}. Elegís tu modelo y coordinamos todo por WhatsApp.`
   );
 }
@@ -50,9 +54,9 @@ function descripcionDelSitio(cantidadModelos: number): string {
  * justo en el canal por el que entra cada pedido.
  */
 export async function generateMetadata(): Promise<Metadata> {
-  const variantes = await obtenerCatalogo();
+  const geometricas = await obtenerVariantesGeometricas();
   const destacada = await obtenerDestacada();
-  const descripcion = descripcionDelSitio(variantes.length);
+  const descripcion = descripcionDelSitio(geometricas.length);
   const titulo = 'Lámpara Geométrica de mesa';
   const imagen = {
     url: destacada.imagen,

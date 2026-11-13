@@ -5,14 +5,18 @@ import { notFound } from 'next/navigation';
 
 import { CajaCompra } from '@/components/CajaCompra';
 import { FichaTecnica } from '@/components/FichaTecnica';
+import { GaleriaProducto } from '@/components/GaleriaProducto';
 import { JsonLd } from '@/components/JsonLd';
 import { LlamadaFinal } from '@/components/LlamadaFinal';
+import { Preguntas } from '@/components/Preguntas';
 import { obtenerCatalogo, obtenerVariante } from '@/lib/catalogo';
-import { ficha, jsonLdMigas, jsonLdProducto, urlDeVariante } from '@/lib/seo';
+import { jsonLdPreguntas } from '@/lib/preguntas';
+import { jsonLdMigas, jsonLdProducto, obtenerFichaDeVariante, urlDeVariante } from '@/lib/seo';
+import { precioARS } from '@/lib/site';
 
 export const revalidate = 3600;
 
-/** Las 6 páginas se generan en el build: es lo que las hace indexables sin ejecutar JavaScript. */
+/** Todas las páginas se generan en el build: es lo que las hace indexables sin ejecutar JavaScript. */
 export async function generateStaticParams() {
   const variantes = await obtenerCatalogo();
   return variantes.map((variante) => ({ slug: variante.slug }));
@@ -29,7 +33,7 @@ export async function generateMetadata({
     return { title: 'Modelo no encontrado' };
   }
 
-  const titulo = `${variante.producto} ${variante.nombreCorto}`;
+  const titulo = `${variante.producto} — ${variante.nombreCorto}`;
 
   return {
     title: titulo,
@@ -63,11 +67,19 @@ export default async function PaginaVariante({ params }: { params: { slug: strin
 
   const catalogo = await obtenerCatalogo();
   const otras = catalogo.filter((v) => v.slug !== variante.slug);
+  const datosFicha = obtenerFichaDeVariante(variante);
+  const esEspecial = variante.tipoProducto !== 'geometrica';
+  const rutaSeccion = variante.esAstronauta
+    ? '/#astronauta'
+    : variante.esLunar
+      ? '/#lunar'
+      : '/#modelos';
 
   return (
     <>
       <JsonLd datos={jsonLdProducto(variante)} />
       <JsonLd datos={jsonLdMigas(variante)} />
+      <JsonLd datos={jsonLdPreguntas(variante)} />
 
       <article>
         <div className="contenedor py-10">
@@ -76,39 +88,47 @@ export default async function PaginaVariante({ params }: { params: { slug: strin
               Inicio
             </Link>
             <span className="mx-2 text-noche-borde">/</span>
-            <Link href="/#modelos" className="transition-colors hover:text-hueso">
-              Modelos
-            </Link>
-            <span className="mx-2 text-noche-borde">/</span>
-            <span className="text-hueso">{variante.nombreCorto}</span>
+            {esEspecial ? (
+              <span className="text-hueso">{variante.producto}</span>
+            ) : (
+              <>
+                <Link href={rutaSeccion} className="transition-colors hover:text-hueso">
+                  {variante.producto}
+                </Link>
+                <span className="mx-2 text-noche-borde">/</span>
+                <span className="text-hueso">{variante.nombreCorto}</span>
+              </>
+            )}
           </nav>
         </div>
 
         <section className="border-b border-noche-borde">
-          {/* Foto y descripción a la izquierda, caja de compra fija a la derecha. */}
           <div className="contenedor grid gap-10 pb-20 md:pb-28 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
             <div>
-              <div className="relative aspect-square w-full overflow-hidden border border-noche-borde bg-noche-suave">
-                <Image
-                  src={variante.imagen}
-                  alt={`${variante.producto} con ${variante.patron}, encendida`}
-                  fill
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 55vw"
-                  className="object-cover"
-                />
-              </div>
+              <GaleriaProducto variante={variante} />
 
               <h1 className="mt-10 font-display text-4xl leading-tight tracking-tight text-hueso sm:text-5xl">
-                {variante.nombreCorto}
+                {esEspecial ? variante.producto : `${variante.producto} — ${variante.nombreCorto}`}
               </h1>
 
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-humo">
                 {variante.descripcion}
               </p>
 
+              {variante.caracteristicas.length > 0 ? (
+                <ul className="mt-6 max-w-xl space-y-2.5 border-y border-noche-borde py-5 text-sm text-hueso">
+                  {variante.caracteristicas.map((item) => (
+                    <li key={item} className="flex items-start gap-3">
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-luz" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+
               <p className="mt-5 text-sm text-humo">
-                {ficha.anchoMm} × {ficha.altoMm} mm · {ficha.materialesCorto} · {ficha.iluminacion}
+                {datosFicha.dimensionesTexto} · {datosFicha.materialesCorto} ·{' '}
+                {datosFicha.iluminacion}
               </p>
             </div>
 
@@ -116,33 +136,38 @@ export default async function PaginaVariante({ params }: { params: { slug: strin
           </div>
         </section>
 
-        <FichaTecnica />
+        <FichaTecnica variante={variante} />
+
+        <Preguntas variante={variante} />
 
         <section className="border-b border-noche-borde py-20 md:py-28">
           <div className="contenedor">
-            <p className="etiqueta">Los otros modelos</p>
+            <p className="etiqueta">También en el catálogo</p>
             <h2 className="mt-4 font-display text-3xl tracking-tight text-hueso">
-              Misma lámpara, otra trama.
+              Otras lámparas y diseños disponibles.
             </h2>
 
-            <ul className="mt-12 grid gap-px border border-noche-borde bg-noche-borde sm:grid-cols-2 lg:grid-cols-5">
+            <ul className="mt-12 grid gap-px border border-noche-borde bg-noche-borde sm:grid-cols-2 lg:grid-cols-4">
               {otras.map((otra) => (
                 <li key={otra.slug} className="bg-noche">
-                  <Link href={`/lampara/${otra.slug}`} className="group block">
+                  <Link href={`/lampara/${otra.slug}`} className="group block h-full">
                     <span className="relative block aspect-square overflow-hidden bg-noche-suave">
                       <Image
                         src={otra.imagen}
-                        alt={`Lámpara Geométrica con ${otra.patron}`}
+                        alt={`${otra.producto} — ${otra.patron}`}
                         fill
-                        sizes="(max-width: 640px) 50vw, 20vw"
-                        // Las cinco juntas pesan menos de 100 KB: esperar a que el navegador
-                        // las descubra al hacer scroll solo deja huecos negros a la vista.
+                        sizes="(max-width: 640px) 50vw, 25vw"
                         loading="eager"
                         className="object-cover transition duration-500 group-hover:scale-105"
                       />
                     </span>
-                    <span className="block p-4 font-display text-sm text-hueso transition-colors group-hover:text-luz">
-                      {otra.nombreCorto}
+                    <span className="block p-4">
+                      <span className="block font-display text-sm text-hueso transition-colors group-hover:text-luz">
+                        {otra.tipoProducto !== 'geometrica' ? otra.producto : otra.nombreCorto}
+                      </span>
+                      <span className="mt-1 block text-xs text-humo">
+                        {precioARS(otra.precio)}
+                      </span>
                     </span>
                   </Link>
                 </li>

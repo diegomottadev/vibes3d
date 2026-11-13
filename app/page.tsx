@@ -1,32 +1,49 @@
-import { FichaTecnica } from '@/components/FichaTecnica';
 import { GrillaModelos } from '@/components/GrillaModelos';
-import { Hero } from '@/components/Hero';
 import { JsonLd } from '@/components/JsonLd';
 import { LlamadaFinal } from '@/components/LlamadaFinal';
-import { Preguntas } from '@/components/Preguntas';
-import { obtenerCatalogo, obtenerDestacada } from '@/lib/catalogo';
-import { jsonLdPreguntas } from '@/lib/preguntas';
+import { SeccionLunar } from '@/components/SeccionLunar';
+import {
+  obtenerDestacada,
+  obtenerVarianteAstronauta,
+  obtenerVarianteLunar,
+  obtenerVariantesGeometricas,
+} from '@/lib/catalogo';
 import { jsonLdProducto } from '@/lib/seo';
 
 /** Se regenera cada hora: un cambio de precio en la planilla llega solo. */
 export const revalidate = 3600;
 
 export default async function Inicio() {
-  const variantes = await obtenerCatalogo();
+  const variantesGeometricas = await obtenerVariantesGeometricas();
   const destacada = await obtenerDestacada();
+  const lunar = await obtenerVarianteLunar();
+  const astronauta = await obtenerVarianteAstronauta();
 
   return (
     <>
-      {/* En la home marcamos la variante destacada; cada modelo tiene su propio Product en su página. */}
       <JsonLd datos={jsonLdProducto(destacada)} />
+      {lunar ? <JsonLd datos={jsonLdProducto(lunar)} /> : null}
+      {astronauta ? <JsonLd datos={jsonLdProducto(astronauta)} /> : null}
 
-      {/* Las mismas preguntas que muestra el acordeón, para que Google pueda desplegarlas. */}
-      <JsonLd datos={jsonLdPreguntas()} />
+      {astronauta ? (
+        <SeccionLunar
+          lunar={astronauta}
+          idSeccion="astronauta"
+          etiquetaDestaque="Nuevo producto"
+          subtituloEtiqueta="Luna 18 cm + Astronauta · 33 cm de altura"
+        />
+      ) : null}
 
-      <Hero destacada={destacada} cantidadModelos={variantes.length} />
-      <GrillaModelos variantes={variantes} />
-      <FichaTecnica />
-      <Preguntas />
+      {lunar ? (
+        <SeccionLunar
+          lunar={lunar}
+          idSeccion="lunar"
+          etiquetaDestaque="Destacado"
+          subtituloEtiqueta="Luz de ambiente · 18 cm"
+        />
+      ) : null}
+
+      <GrillaModelos variantes={variantesGeometricas} />
       <LlamadaFinal />
     </>
   );

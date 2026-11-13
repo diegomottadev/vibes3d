@@ -7,8 +7,9 @@ import { Dialog } from 'primereact/dialog';
 import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
+import { precioPorUnidad, precioTotal } from '@/lib/precios';
 import { filtros, LARGOS, limpiarParaMensaje } from '@/lib/sanitizar';
 import { precioARS } from '@/lib/site';
 import { urlWhatsApp, type DatosEnvio } from '@/lib/whatsapp';
@@ -34,7 +35,8 @@ const OBLIGATORIOS = [
 ] as const satisfies readonly (keyof DatosEnvio)[];
 
 export function DialogoPedido({ abierto, alCerrar }: { abierto: boolean; alCerrar: () => void }) {
-  const { lineas, unidades, total, descuento, cambiarCantidad, quitar, vaciar } = usePedido();
+  const { variantes, lineas, unidades, total, descuento, cambiarCantidad, quitar, vaciar } =
+    usePedido();
   const [datos, setDatos] = useState<DatosEnvio>(DATOS_VACIOS);
   const [intentoEnviar, setIntentoEnviar] = useState(false);
   const [enviado, setEnviado] = useState(false);
@@ -42,21 +44,53 @@ export function DialogoPedido({ abierto, alCerrar }: { abierto: boolean; alCerra
   const vacio = lineas.length === 0;
   const faltantes = OBLIGATORIOS.filter((campo) => datos[campo].trim().length === 0);
 
-  /**
-   * Cerrar también da por terminada la confirmación: si no, al volver a abrir el diálogo con un
-   * pedido nuevo seguiría mostrando el cartel del envío anterior.
-   */
+  // Tres accesos directos (uno por línea de producto) para cuando el carrito queda vacío
+  const sugeridosCatalogo = useMemo(() => {
+    const astronauta = variantes.find((v) => v.esAstronauta);
+    const lunar = variantes.find((v) => v.esLunar);
+    const geometrica = variantes.find((v) => v.tipoProducto === 'geometrica' && v.destacado) ??
+      variantes.find((v) => v.tipoProducto === 'geometrica');
+
+    return [
+      astronauta
+        ? {
+            titulo: astronauta.producto,
+            subtitulo: '33 cm de altura',
+            precio: astronauta.precio,
+            imagen: astronauta.imagen,
+            href: `/lampara/${astronauta.slug}`,
+          }
+        : null,
+      lunar
+        ? {
+            titulo: lunar.producto,
+            subtitulo: '18 cm de diámetro',
+            precio: lunar.precio,
+            imagen: lunar.imagen,
+            href: `/lampara/${lunar.slug}`,
+          }
+        : null,
+      geometrica
+        ? {
+            titulo: geometrica.producto,
+            subtitulo: '6 diseños de pantalla',
+            precio: geometrica.precio,
+            imagen: geometrica.imagen,
+            href: '/#modelos',
+          }
+        : null,
+    ].filter((x): x is NonNullable<typeof x> => x !== null);
+  }, [variantes]);
+
   function cerrar() {
     setEnviado(false);
     alCerrar();
   }
 
-  /** Cada campo se filtra a medida que se escribe: el DNI, por ejemplo, no acepta letras. */
   function actualizar(campo: keyof DatosEnvio, valor: string) {
     setDatos((previos) => ({ ...previos, [campo]: filtros[campo](valor) }));
   }
 
-  /** Marca el campo en rojo solo después del primer intento de envío, no mientras se escribe. */
   function invalido(campo: keyof DatosEnvio): boolean {
     return intentoEnviar && datos[campo].trim().length === 0;
   }
@@ -65,8 +99,6 @@ export function DialogoPedido({ abierto, alCerrar }: { abierto: boolean; alCerra
     setIntentoEnviar(true);
     if (vacio || faltantes.length > 0) return;
 
-    // Normalización final: sin saltos de línea ni espacios repetidos, para que nadie pueda
-    // agregar líneas falsas al mensaje del pedido.
     const limpios = Object.fromEntries(
       Object.entries(datos).map(([campo, valor]) => [campo, limpiarParaMensaje(valor)]),
     ) as DatosEnvio;
@@ -77,21 +109,11 @@ export function DialogoPedido({ abierto, alCerrar }: { abierto: boolean; alCerra
       'noopener,noreferrer',
     );
 
-    // El pedido ya viaja dentro del mensaje de WhatsApp, así que acá se cierra el ciclo: se vacía
-    // el carrito y el diálogo pasa a mostrar la confirmación en vez del formulario.
-    //
-    // Ojo: `window.open` solo abre WhatsApp con el texto redactado, todavía falta que la persona
-    // apriete enviar. Por eso la confirmación le pide que lo revise en el chat en vez de darlo por
-    // hecho. Los datos del envío sí se conservan, que es lo que más cuesta volver a tipear.
     vaciar();
     setIntentoEnviar(false);
     setEnviado(true);
   }
 
-  /*
-    El total y el botón van en el `footer` del Dialog: queda fuera del área que scrollea,
-    así que el precio y el CTA se ven siempre, por más largo que sea el formulario.
-  */
   const pie = vacio || enviado ? null : (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div className="text-left">
@@ -136,65 +158,101 @@ export function DialogoPedido({ abierto, alCerrar }: { abierto: boolean; alCerra
 
           <p className="text-lg text-hueso">Te abrimos WhatsApp con el pedido ya escrito.</p>
 
-          {/*
-            No se afirma que el mensaje salió: `window.open` solo redacta el chat, el envío lo hace
-            la persona. Decirle que revise es lo que evita que se quede esperando una respuesta
-            a un mensaje que nunca mandó.
-          */}
           <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-humo">
             Revisá que se haya enviado desde tu chat. Te respondo por ahí para coordinar el envío y
             el pago. Si WhatsApp no se abrió, puede estar bloqueando las ventanas emergentes.
           </p>
 
           <Link
-            href="/#modelos"
+            href="/"
             onClick={cerrar}
             className="mt-8 inline-block bg-luz px-6 py-3 font-display text-xs uppercase tracking-etiqueta text-noche transition-colors hover:bg-luz-calida"
           >
-            Seguir viendo modelos
+            Volver al catálogo
           </Link>
         </div>
       ) : vacio ? (
-        <div className="py-10 text-center">
-          <p className="text-lg text-hueso">Todavía no elegiste ninguna lámpara.</p>
-          <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-humo">
-            Entrá a cualquiera de los seis modelos y agregalo desde ahí. Podés mezclar tramas
-            distintas en el mismo pedido.
+        <div className="py-6 text-center">
+          <p className="text-lg text-hueso">Tu pedido está vacío.</p>
+          <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-humo">
+            Elegí cualquiera de nuestras lámparas para sumarla a tu pedido. Podés combinar
+            distintos productos y modelos en el mismo envío.
           </p>
+
+          {sugeridosCatalogo.length > 0 ? (
+            <div className="mt-6 grid gap-3 text-left sm:grid-cols-3">
+              {sugeridosCatalogo.map((item) => (
+                <Link
+                  key={item.titulo}
+                  href={item.href}
+                  onClick={cerrar}
+                  className="group flex items-center gap-3 border border-noche-borde bg-noche p-3 transition hover:border-luz sm:flex-col sm:items-start"
+                >
+                  <span className="relative block h-16 w-16 shrink-0 overflow-hidden bg-noche-suave sm:aspect-[4/3] sm:h-auto sm:w-full">
+                    <Image
+                      src={item.imagen}
+                      alt={item.titulo}
+                      fill
+                      sizes="(max-width: 640px) 64px, 200px"
+                      loading="eager"
+                      className="object-cover transition duration-300 group-hover:scale-105"
+                    />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block font-display text-sm text-hueso transition-colors group-hover:text-luz">
+                      {item.titulo}
+                    </span>
+                    <span className="block text-xs text-humo">{item.subtitulo}</span>
+                    <span className="mt-1 block font-display text-xs text-luz">
+                      {precioARS(item.precio)}
+                    </span>
+                  </span>
+                </Link>
+              ))}
+            </div>
+          ) : null}
+
           <Link
-            href="/#modelos"
+            href="/"
             onClick={cerrar}
             className="mt-8 inline-block bg-luz px-6 py-3 font-display text-xs uppercase tracking-etiqueta text-noche transition-colors hover:bg-luz-calida"
           >
-            Ver los modelos
+            Ver todo el catálogo
           </Link>
         </div>
       ) : (
         <>
           <ul className="mb-8 divide-y divide-noche-borde border-y border-noche-borde">
-            {/*
-              En pantallas chicas los controles bajan a una segunda línea (`w-full sm:w-auto`):
-              el nombre, la cantidad y el tacho no entran en 390px sin pisarse.
-            */}
             {lineas.map(({ variante, cantidad }) => (
               <li key={variante.slug} className="flex flex-wrap items-center gap-x-4 gap-y-3 py-4">
                 <span className="relative block h-16 w-16 shrink-0 overflow-hidden bg-noche">
                   <Image
                     src={variante.imagen}
-                    alt={`Lámpara Geométrica con ${variante.patron}`}
+                    alt={`${variante.producto} — ${variante.patron}`}
                     fill
                     sizes="64px"
-                    // Sin lazy: son seis miniaturas diminutas dentro de un modal que ya se abrió.
-                    // Esperar a que el navegador las descubra deja huecos negros en el resumen.
                     loading="eager"
                     className="object-cover"
                   />
                 </span>
 
                 <span className="min-w-0 flex-1">
-                  <span className="block font-display text-hueso">{variante.nombreCorto}</span>
+                  <span className="block font-display text-hueso">
+                    {variante.tipoProducto !== 'geometrica'
+                      ? variante.producto
+                      : `${variante.producto} · ${variante.nombreCorto}`}
+                  </span>
                   <span className="block text-sm text-humo">
-                    {precioARS(variante.precio)} por unidad
+                    {cantidad > 1 ? (
+                      <>
+                        <span className="text-luz">
+                          {precioARS(precioTotal(variante.precio, cantidad, variante.producto))}
+                        </span>{' '}
+                        ({precioARS(precioPorUnidad(variante.precio, cantidad, variante.producto))} c/u)
+                      </>
+                    ) : (
+                      `${precioARS(variante.precio)} por unidad`
+                    )}
                   </span>
                 </span>
 
@@ -209,9 +267,6 @@ export function DialogoPedido({ abierto, alCerrar }: { abierto: boolean; alCerra
                     inputClassName="w-12 text-center"
                     incrementButtonIcon="pi pi-plus"
                     decrementButtonIcon="pi pi-minus"
-                    // Los +/- son controles del campo, no acciones principales: van neutros y
-                    // chicos. Se fuerza desde acá porque el estilo ámbar de .p-button gana por
-                    // especificidad sobre cualquier regla que pongamos en la hoja.
                     incrementButtonClassName="!w-10 !px-0 !border-campo-borde !bg-campo !text-hueso hover:!text-luz"
                     decrementButtonClassName="!w-10 !px-0 !border-campo-borde !bg-campo !text-hueso hover:!text-luz"
                     aria-label={`Cantidad de ${variante.nombreCorto}`}
@@ -230,10 +285,8 @@ export function DialogoPedido({ abierto, alCerrar }: { abierto: boolean; alCerra
             ))}
           </ul>
 
-          {/* Salida hacia la grilla sin perder lo cargado: el pedido vive en localStorage,
-              así que volver a elegir modelos no cuesta nada. */}
           <Link
-            href="/#modelos"
+            href="/"
             onClick={cerrar}
             className="mb-8 inline-flex items-center gap-2 font-display text-xs uppercase tracking-etiqueta text-humo transition-colors hover:text-luz"
           >
@@ -260,8 +313,6 @@ export function DialogoPedido({ abierto, alCerrar }: { abierto: boolean; alCerra
                 alCambiar={(v) => actualizar('dni', v)}
                 invalido={invalido('dni')}
                 marcador="Solo números, sin puntos"
-                // La razón y la garantía de privacidad van acá, junto al campo que genera la duda,
-                // y no al final del formulario donde ya no evitan que alguien abandone.
                 ayuda="Lo necesito para despachar el envío a tu nombre. No se guarda en ningún lado: viaja solo dentro de tu mensaje de WhatsApp."
                 inputMode="numeric"
                 maxLength={LARGOS.dni}
@@ -368,11 +419,6 @@ function Campo({
     <label className={`flex flex-col gap-2 ${className}`}>
       <span className={`text-sm ${invalido ? 'text-alerta' : 'text-humo'}`}>{etiqueta}</span>
 
-      {/*
-        El error se marca con una barra roja en un span propio, y no pintando el borde del input:
-        los estilos de PrimeReact terminan ganando sobre cualquier color que le pongamos al campo.
-        Además el color no va solo: la etiqueta también cambia, para quien no distingue rojos.
-      */}
       <span className={`block ${invalido ? 'border-l-2 border-alerta pl-2' : ''}`}>
         <InputText
           value={valor}
