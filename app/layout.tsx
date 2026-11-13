@@ -11,10 +11,7 @@ import { PedidoProvider } from '@/components/PedidoProvider';
 import { PiePagina } from '@/components/PiePagina';
 import { Proveedores } from '@/components/Proveedores';
 import { JsonLd } from '@/components/JsonLd';
-import {
-  obtenerCatalogo,
-  obtenerVariantesGeometricas,
-} from '@/lib/catalogo';
+import { obtenerCatalogo } from '@/lib/catalogo';
 import { jsonLdNegocio } from '@/lib/seo';
 import { sitio } from '@/lib/site';
 
@@ -36,20 +33,12 @@ const sans = Manrope({
  * La cantidad de modelos y la localidad salen de los datos, no de un texto fijo: si mañana hay
  * siete pantallas, la descripción que ve Google se actualiza sola.
  */
-function descripcionDelSitio(cantidadModelos: number): string {
-  const lugar = sitio.localidad.confirmada
-    ? `${sitio.localidad.ciudad}, ${sitio.localidad.provincia}`
-    : 'Argentina';
-
-  return (
-    `Lámparas decorativas Astronauta, Lunar, Mini Luna, Hive, Halo, Infinity, Geométricas (${cantidadModelos} diseños) y Macetas Animadas. ` +
-    `Envíos a todo el país desde ${lugar}. Pedí por WhatsApp.`
-  );
+function descripcionDelSitio(): string {
+  return 'Lámparas, macetas, organizadores y decoración. Envíos a todo el país 🇦🇷';
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const geometricas = await obtenerVariantesGeometricas();
-  const descripcion = descripcionDelSitio(geometricas.length);
+  const descripcion = descripcionDelSitio();
   const titulo = 'Iluminación decorativa y objetos de diseño';
   const imagen = {
     url: '/fotos/og-vibes.jpg?v=2',
