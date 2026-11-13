@@ -33,7 +33,7 @@ function urlDelSitio(): string {
 
 export const sitio = {
   marca: 'Vibes',
-  tagline: 'Iluminación decorativa en Argentina',
+  tagline: 'Lámparas, macetas, organizadores y decoración. Envíos a todo el país 🇦🇷',
 
   /**
    * URL canónica. Se toma de la variable de entorno para no hardcodear un dominio

@@ -177,13 +177,16 @@ export function urlDeVariante(slug: string): string {
 
 export function jsonLdProducto(variante: Variante) {
   const datosFicha = obtenerFichaDeVariante(variante);
+  const imagenAbsoluta = variante.imagen.startsWith('http')
+    ? variante.imagen
+    : `${sitio.url}${variante.imagen}`;
 
   return {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: `${variante.producto} — ${variante.nombreCorto}`,
     description: variante.descripcion,
-    image: [variante.imagen],
+    image: [imagenAbsoluta],
     sku: `LG-${variante.id}`,
     brand: {
       '@type': 'Brand',
@@ -222,9 +225,12 @@ export function jsonLdNegocio() {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
     name: sitio.marca,
-    description: `${sitio.tagline}. Lámpara Astronauta, Lámpara Lunar y Lámparas Geométricas de mesa.`,
+    description: sitio.tagline,
     url: sitio.url,
+    logo: `${sitio.url}/fotos/og-vibes.jpg`,
+    image: `${sitio.url}/fotos/og-vibes.jpg`,
     telephone: sitio.whatsappVisible,
+    sameAs: sitio.instagram ? [sitio.instagram] : undefined,
     address: {
       '@type': 'PostalAddress',
       addressLocality: sitio.localidad.ciudad,
