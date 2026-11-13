@@ -13,7 +13,6 @@ import { Proveedores } from '@/components/Proveedores';
 import { JsonLd } from '@/components/JsonLd';
 import {
   obtenerCatalogo,
-  obtenerDestacada,
   obtenerVariantesGeometricas,
 } from '@/lib/catalogo';
 import { jsonLdNegocio } from '@/lib/seo';
@@ -43,24 +42,21 @@ function descripcionDelSitio(cantidadModelos: number): string {
     : 'Argentina';
 
   return (
-    `Lámpara Geométrica de mesa en ${cantidadModelos} diseños de pantalla y Lámpara Lunar de 18 cm. ` +
-    `Stock permanente en ${lugar}. Elegís tu modelo y coordinamos todo por WhatsApp.`
+    `Lámparas decorativas Astronauta, Lunar, Mini Luna, Hive, Halo, Infinity, Geométricas (${cantidadModelos} diseños) y Macetas Animadas. ` +
+    `Envíos a todo el país desde ${lugar}. Pedí por WhatsApp.`
   );
 }
 
-/**
- * Es `generateMetadata` y no un objeto fijo porque la imagen de Open Graph es la foto de la
- * variante destacada: sin ella, compartir el sitio por WhatsApp muestra un rectángulo vacío,
- * justo en el canal por el que entra cada pedido.
- */
 export async function generateMetadata(): Promise<Metadata> {
   const geometricas = await obtenerVariantesGeometricas();
-  const destacada = await obtenerDestacada();
   const descripcion = descripcionDelSitio(geometricas.length);
-  const titulo = 'Lámpara Geométrica de mesa';
+  const titulo = 'Iluminación decorativa y objetos de diseño';
   const imagen = {
-    url: destacada.imagen,
-    alt: `Lámpara Geométrica con ${destacada.patron}, encendida`,
+    url: '/fotos/og-vibes.jpg',
+    width: 1200,
+    height: 630,
+    type: 'image/jpeg',
+    alt: `${sitio.marca} — ${titulo}`,
   };
 
   return {

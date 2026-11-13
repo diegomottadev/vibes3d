@@ -92,7 +92,12 @@ export function GaleriaProducto({ variante }: { variante: Variante }) {
                       className={
                         idx === 0
                           ? 'object-cover'
-                          : !variante.esAstronauta && !variante.esMiniLuna && !variante.esMaceta
+                          : !variante.esAstronauta &&
+                              !variante.esMiniLuna &&
+                              !variante.esMaceta &&
+                              !variante.esHive &&
+                              !variante.esInfinity &&
+                              !variante.esHalo
                             ? 'object-cover'
                             : 'object-contain'
                       }

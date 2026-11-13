@@ -52,6 +52,9 @@ export type Variante = {
   esAstronauta: boolean;
   esMiniLuna: boolean;
   esMaceta: boolean;
+  esHive: boolean;
+  esInfinity: boolean;
+  esHalo: boolean;
   caracteristicas: string[];
   galeria: MediaGaleria[];
 };
@@ -138,6 +141,55 @@ const GALERIA_MACETA_EXTRA: MediaGaleria[] = [
   },
 ];
 
+const GALERIA_HIVE_EXTRA: MediaGaleria[] = [
+  {
+    tipo: 'imagen',
+    url: '/fotos/hive/img_6122.webp',
+    etiqueta: 'Luz cálida en mesa de lectura',
+  },
+  {
+    tipo: 'imagen',
+    url: '/fotos/hive/img_6123.webp',
+    etiqueta: 'Detalle de trama y base texturada',
+  },
+  {
+    tipo: 'video',
+    url: '/fotos/hive/video-hive.mp4',
+    etiqueta: 'Video: encendida en vivo',
+  },
+];
+
+const GALERIA_INFINITY_EXTRA: MediaGaleria[] = [
+  {
+    tipo: 'imagen',
+    url: '/fotos/infinity/img_6367.webp',
+    etiqueta: 'Vista completa con base trípode',
+  },
+  {
+    tipo: 'video',
+    url: '/fotos/infinity/video-infinity.mp4',
+    etiqueta: 'Video: encendida en vivo',
+  },
+];
+
+const GALERIA_HALO_EXTRA: MediaGaleria[] = [
+  {
+    tipo: 'imagen',
+    url: '/fotos/halo/img_6119.webp',
+    etiqueta: 'Luz cálida en ambiente',
+  },
+  {
+    tipo: 'imagen',
+    url: '/fotos/halo/img_6120.webp',
+    etiqueta: 'Detalle de anillos y base texturada',
+  },
+  {
+    tipo: 'video',
+    url: '/fotos/halo/video-halo.mp4',
+    etiqueta: 'Video: encendida en vivo',
+  },
+];
+
 function sinAcentos(texto: string): string {
   return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
@@ -171,6 +223,15 @@ function normalizarNombreProducto(nombre: string): string {
   }
   if (/^macetas? animadas?$/.test(base)) {
     return 'Macetas Animadas';
+  }
+  if (/^lampara hive$/.test(base)) {
+    return 'Lámpara Hive';
+  }
+  if (/^lampara infinit[yi]$/.test(base)) {
+    return 'Lámpara Infinity';
+  }
+  if (/^lampara halo$/.test(base)) {
+    return 'Lámpara Halo';
   }
   return limpio;
 }
@@ -254,6 +315,17 @@ function filaAVariante(fila: FilaCSV): Variante {
   const esAstronauta = tipoProducto === 'astronauta';
   const esMiniLuna = tipoProducto === 'mini-luna';
   const esMaceta = tipoProducto === 'maceta';
+  const esHive = tipoProducto === 'hive';
+  const esInfinity = tipoProducto === 'infinity';
+  const esHalo = tipoProducto === 'halo';
+
+  const filaRespaldo = (catalogoDeRespaldo as FilaCSV[]).find((r) => {
+    const prodRespaldo = normalizarNombreProducto(r.nombre_producto ?? '');
+    return (
+      (fila.id && String(r.id ?? '').trim() === String(fila.id ?? '').trim()) ||
+      (producto && prodRespaldo === producto && (r.variante ?? '').trim() === (fila.variante ?? '').trim())
+    );
+  });
 
   const varianteCruda = (fila.variante ?? '').trim();
   const variante =
@@ -264,7 +336,13 @@ function filaAVariante(fila: FilaCSV): Variante {
         ? 'Luna 15 cm | LED con control remoto'
         : esMaceta
           ? 'Con patitas articuladas | 6 colores'
-          : producto);
+          : esHive
+            ? '13 × 23 cm | Blanco cálido 220 V'
+            : esInfinity
+              ? '18 × 24 cm | Blanco cálido 220 V'
+              : esHalo
+                ? '16 × 21 cm | Blanco cálido 220 V'
+                : producto);
 
   const slug =
     esAstronauta && !varianteCruda
@@ -273,7 +351,13 @@ function filaAVariante(fila: FilaCSV): Variante {
         ? 'lampara-mini-luna'
         : esMaceta && !varianteCruda
           ? 'macetas-animadas'
-          : slugDeVariante(variante);
+          : esHive && !varianteCruda
+            ? 'lampara-hive'
+            : esInfinity && !varianteCruda
+              ? 'lampara-infinity'
+              : esHalo && !varianteCruda
+                ? 'lampara-halo'
+                : slugDeVariante(variante);
   const descripcionPropia = descripcionesPorSlug[slug];
 
   const fallbackFoto = esAstronauta
@@ -282,7 +366,13 @@ function filaAVariante(fila: FilaCSV): Variante {
       ? '/fotos/lampara-mini-luna.webp'
       : esMaceta
         ? '/fotos/macetas-animadas.webp'
-        : '/fotos/luna-18-cm-blanco-calido.webp';
+        : esHive
+          ? '/fotos/lampara-hive.webp'
+          : esInfinity
+            ? '/fotos/lampara-infinity.webp'
+            : esHalo
+              ? '/fotos/lampara-halo.webp'
+              : '/fotos/luna-18-cm-blanco-calido.webp';
 
   const imagenPrincipal =
     fotoLocal(slug) ?? ((fila.imagen_url ?? '').trim() || fallbackFoto);
@@ -293,9 +383,15 @@ function filaAVariante(fila: FilaCSV): Variante {
       ? GALERIA_MINI_LUNA_EXTRA
       : esMaceta
         ? GALERIA_MACETA_EXTRA
-        : esLunar
-          ? GALERIA_LUNAR_EXTRA
-          : [];
+        : esHive
+          ? GALERIA_HIVE_EXTRA
+          : esInfinity
+            ? GALERIA_INFINITY_EXTRA
+            : esHalo
+              ? GALERIA_HALO_EXTRA
+              : esLunar
+                ? GALERIA_LUNAR_EXTRA
+                : [];
 
   const galeria: MediaGaleria[] = [
     {
@@ -306,25 +402,32 @@ function filaAVariante(fila: FilaCSV): Variante {
     ...galeriaExtra,
   ];
 
+  const descripcionCsv = (fila.descripcion ?? '').trim() || (filaRespaldo?.descripcion ?? '').trim();
+  const caracteristicasCsv =
+    (fila.caracteristicas ?? '').trim() || (filaRespaldo?.caracteristicas ?? '').trim();
+
   return {
     id: String(fila.id ?? '').trim(),
     producto,
     variante,
     nombreCorto: nombreCortoDeVariante(variante),
     slug,
-    categoria: (fila.categoria ?? '').trim(),
-    precio: parsearPrecio(fila.precio),
+    categoria: (fila.categoria ?? '').trim() || (filaRespaldo?.categoria ?? '').trim(),
+    precio: parsearPrecio(fila.precio) || parsearPrecio(filaRespaldo?.precio ?? '0'),
     imagen: imagenPrincipal,
-    descripcion: descripcionPropia ?? (fila.descripcion ?? '').trim(),
+    descripcion: descripcionPropia ?? descripcionCsv,
     descripcionEsBorrador: Boolean(descripcionPropia),
     patron: patronesPorSlug[slug] ?? variante.toLowerCase(),
-    destacado: esVerdadero(fila.destacado),
+    destacado: esVerdadero(fila.destacado) || esVerdadero(filaRespaldo?.destacado ?? ''),
     tipoProducto,
     esLunar,
     esAstronauta,
     esMiniLuna,
     esMaceta,
-    caracteristicas: parsearCaracteristicas(fila.caracteristicas, tipoProducto),
+    esHive,
+    esInfinity,
+    esHalo,
+    caracteristicas: parsearCaracteristicas(caracteristicasCsv, tipoProducto),
     galeria,
   };
 }
@@ -342,17 +445,21 @@ function parsearCSV(texto: string): Variante[] {
 
   return data
     .filter((fila) => {
+      const tieneNombre = (fila.nombre_producto ?? '').trim().length > 0;
       const tieneVariante = (fila.variante ?? '').trim().length > 0;
-      const tieneDescripcion = (fila.descripcion ?? '').trim().length > 0;
-      return tieneVariante || tieneDescripcion;
+      return tieneNombre || tieneVariante;
     })
     .map(filaAVariante);
 }
 
 /**
  * Lee el catálogo completo desde la planilla en tiempo de build.
+ * Si el respaldo local incluye productos nuevos que aún no fueron publicados en el CSV,
+ * los incorpora al final para que estén disponibles de inmediato.
  */
 export async function obtenerCatalogo(): Promise<Variante[]> {
+  const respaldo = (catalogoDeRespaldo as FilaCSV[]).map(filaAVariante);
+
   try {
     const respuesta = await fetch(CSV_URL, {
       next: { revalidate: 3600 },
@@ -369,13 +476,16 @@ export async function obtenerCatalogo(): Promise<Variante[]> {
       throw new Error('la planilla no devolvió ninguna fila con variante');
     }
 
-    return variantes;
+    const slugsEnPlanilla = new Set(variantes.map((v) => v.slug));
+    const faltantesDelRespaldo = respaldo.filter((v) => !slugsEnPlanilla.has(v.slug));
+
+    return [...variantes, ...faltantesDelRespaldo];
   } catch (error) {
     console.warn(
       `[catalogo] no se pudo leer la planilla (${(error as Error).message}). ` +
         'Uso el snapshot de data/catalogo-respaldo.json.',
     );
-    return (catalogoDeRespaldo as FilaCSV[]).map(filaAVariante);
+    return respaldo;
   }
 }
 
@@ -407,6 +517,24 @@ export async function obtenerVarianteMiniLuna(): Promise<Variante | undefined> {
 export async function obtenerVarianteMaceta(): Promise<Variante | undefined> {
   const catalogo = await obtenerCatalogo();
   return catalogo.find((v) => v.tipoProducto === 'maceta');
+}
+
+/** La Lámpara Hive (si está cargada en la planilla). */
+export async function obtenerVarianteHive(): Promise<Variante | undefined> {
+  const catalogo = await obtenerCatalogo();
+  return catalogo.find((v) => v.tipoProducto === 'hive');
+}
+
+/** La Lámpara Infinity (si está cargada en la planilla o respaldo). */
+export async function obtenerVarianteInfinity(): Promise<Variante | undefined> {
+  const catalogo = await obtenerCatalogo();
+  return catalogo.find((v) => v.tipoProducto === 'infinity');
+}
+
+/** La Lámpara Halo (si está cargada en la planilla o respaldo). */
+export async function obtenerVarianteHalo(): Promise<Variante | undefined> {
+  const catalogo = await obtenerCatalogo();
+  return catalogo.find((v) => v.tipoProducto === 'halo');
 }
 
 export async function obtenerVariante(slug: string): Promise<Variante | undefined> {

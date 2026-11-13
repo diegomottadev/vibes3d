@@ -26,7 +26,7 @@ export const ficha: DatosFicha = {
   dimensionesTexto: '130 mm × 230 mm',
   anchoMm: 130,
   altoMm: 230,
-  disponibilidad: 'Stock permanente de los seis modelos',
+  disponibilidad: 'En stock o por encargo — Despacho en 2 a 7 días hábiles',
 };
 
 /** Ficha técnica de la Lámpara Lunar (18 cm). */
@@ -41,7 +41,7 @@ export const fichaLunar: DatosFicha = {
   dimensionesTexto: '18 cm (180 mm) de diámetro',
   anchoMm: 180,
   altoMm: 180,
-  disponibilidad: 'Stock permanente — Lista para enchufar y usar',
+  disponibilidad: 'En stock o por encargo — Despacho en 2 a 7 días hábiles',
 };
 
 /** Ficha técnica de la Lámpara Astronauta (33 cm). */
@@ -56,7 +56,7 @@ export const fichaAstronauta: DatosFicha = {
   dimensionesTexto: '33 cm de altura total (Luna 18 cm + Astronauta 15 cm)',
   anchoMm: 180,
   altoMm: 330,
-  disponibilidad: 'Stock permanente — Lista para enchufar y disfrutar',
+  disponibilidad: 'En stock o por encargo — Despacho en 2 a 7 días hábiles',
 };
 
 /** Ficha técnica de la Lámpara Mini Luna (15 cm). */
@@ -71,7 +71,7 @@ export const fichaMiniLuna: DatosFicha = {
   dimensionesTexto: '15 cm (150 mm) de diámetro',
   anchoMm: 150,
   altoMm: 150,
-  disponibilidad: 'Stock permanente — Lista para conectar y usar',
+  disponibilidad: 'En stock o por encargo — Despacho en 2 a 7 días hábiles',
 };
 
 /** Ficha técnica de las Macetas Animadas. */
@@ -86,15 +86,76 @@ export const fichaMaceta: DatosFicha = {
   dimensionesTexto: '8 cm de alto × 14,8 cm de ancho × 12,8 cm de profundidad (con patitas)',
   anchoMm: 148,
   altoMm: 80,
-  disponibilidad: 'Stock permanente en los 6 colores',
+  disponibilidad: 'En stock o por encargo en los 6 colores — Despacho en 2 a 7 días hábiles',
+};
+
+/** Ficha técnica de la Lámpara Hive (13 × 23 cm). */
+export const fichaHive: DatosFicha = {
+  materiales:
+    'Pantalla cilíndrica de trama panal texturada y base sólida con acabado orgánico de alta ' +
+    'resistencia al calor y al uso diario.',
+  materialesCorto: 'Pantalla de trama panal y base texturada',
+  iluminacion: 'Luz LED 220 V - 6 W (tono blanco cálido)',
+  cable: 'Cable de 1,5 m con enchufe e interruptor incluidos para 220 V',
+  soporte: 'Base cilíndrica texturada integrada',
+  dimensionesTexto: '13 cm de diámetro × 23 cm de altura total',
+  anchoMm: 130,
+  altoMm: 230,
+  disponibilidad: 'En stock o por encargo — Despacho en 2 a 7 días hábiles',
+};
+
+/** Ficha técnica de la Lámpara Infinity (18 × 24 cm). */
+export const fichaInfinity: DatosFicha = {
+  materiales:
+    'Pantalla escultórica de curvas continuas envolventes y soporte de trípode de alta ' +
+    'resistencia al calor y al uso diario.',
+  materialesCorto: 'Pantalla de curvas fluidas y base trípode',
+  iluminacion: 'Luz LED 220 V - 6 W (tono blanco cálido)',
+  cable: 'Cable de 1,5 m con enchufe e interruptor incluidos para 220 V',
+  soporte: 'Base trípode integrada',
+  dimensionesTexto: '18 cm de diámetro × 24 cm de altura total',
+  anchoMm: 180,
+  altoMm: 240,
+  disponibilidad: 'En stock o por encargo — Despacho en 2 a 7 días hábiles',
+};
+
+/** Ficha técnica de la Lámpara Halo (16 × 21 cm). */
+export const fichaHalo: DatosFicha = {
+  materiales:
+    'Pantalla esférica de anillos horizontales que tamizan la salida de luz y base cilíndrica ' +
+    'texturada de alta resistencia al calor y al uso diario.',
+  materialesCorto: 'Pantalla de anillos horizontales y base texturada',
+  iluminacion: 'Luz LED 220 V - 6 W (tono blanco cálido)',
+  cable: 'Cable de 1,5 m con enchufe e interruptor incluidos para 220 V',
+  soporte: 'Base cilíndrica texturada integrada',
+  dimensionesTexto: '16 cm de diámetro × 21 cm de altura total',
+  anchoMm: 160,
+  altoMm: 210,
+  disponibilidad: 'En stock o por encargo — Despacho en 2 a 7 días hábiles',
 };
 
 export function obtenerFichaDeVariante(
   variante?: Pick<
     Variante,
-    'esLunar' | 'esAstronauta' | 'esMiniLuna' | 'esMaceta' | 'tipoProducto'
+    | 'esLunar'
+    | 'esAstronauta'
+    | 'esMiniLuna'
+    | 'esMaceta'
+    | 'esHive'
+    | 'esInfinity'
+    | 'esHalo'
+    | 'tipoProducto'
   >,
 ): DatosFicha {
+  if (variante?.esHalo || variante?.tipoProducto === 'halo') {
+    return fichaHalo;
+  }
+  if (variante?.esInfinity || variante?.tipoProducto === 'infinity') {
+    return fichaInfinity;
+  }
+  if (variante?.esHive || variante?.tipoProducto === 'hive') {
+    return fichaHive;
+  }
   if (variante?.esMaceta || variante?.tipoProducto === 'maceta') {
     return fichaMaceta;
   }
@@ -179,11 +240,17 @@ export function jsonLdMigas(variante: Variante) {
     ? '#astronauta'
     : variante.esMiniLuna
       ? '#mini-luna'
-      : variante.esMaceta
-        ? '#macetas'
-        : variante.esLunar
-          ? '#lunar'
-          : '#modelos';
+      : variante.esHalo
+        ? '#halo'
+        : variante.esInfinity
+          ? '#infinity'
+          : variante.esHive
+            ? '#hive'
+            : variante.esMaceta
+              ? '#macetas'
+              : variante.esLunar
+                ? '#lunar'
+                : '#modelos';
 
   return {
     '@context': 'https://schema.org',

@@ -128,5 +128,44 @@
     "caracteristicas": "Colores\n💛 dorado\n🧡 naranja\n💚 verde\n🤍 blanco\n🩶 gris\n🖤 negro\n📏 Medidas:\n* Alto: 8 cm \n* Ancho con patitas: 14,8 cm \n* Profundidad con patitas: 12,8 cm\n💰$14.000",
     "personalizable": "TRUE",
     "destacado": "TRUE"
+  },
+  {
+    "id": "11",
+    "nombre_producto": "Lampara Hive",
+    "variante": "",
+    "categoria": "Lamparas",
+    "precio": "38900",
+    "imagen_url": "",
+    "descripcion": "Con un diseño moderno y elegante, la Lámpara Hive aporta una iluminación cálida y un toque decorativo a cualquier ambiente. Ideal para mesas de luz, escritorios, estantes o livings.",
+    "stock": "1",
+    "caracteristicas": "Características\n\n📏 Diámetro: 13 cm\n\n📐 Altura total: 23 cm\n\n💡 Luz LED 220 V - 6 W (tono cálido)\n\n🔌 Cable de 1,5 metros con enchufe e interruptor incluidos\n\n🏠 Lista para usar. Solo enchufar y disfrutar.",
+    "personalizable": "FALSE",
+    "destacado": "TRUE"
+  },
+  {
+    "id": "12",
+    "nombre_producto": "Lámpara Infinity",
+    "variante": "",
+    "categoria": "Lamparas",
+    "precio": "41900",
+    "imagen_url": "",
+    "descripcion": "Con curvas fluidas y un diseño envolvente, la Lámpara Infinity proyecta una luz cálida y suave que transforma cualquier rincón en un espacio acogedor. Ideal para dormitorios, livings, escritorios o mesas de luz.",
+    "stock": "1",
+    "caracteristicas": "Características\n\n📏 Diámetro: 18 cm\n\n📐 Altura total: 24 cm\n\n💡 Luz LED 220 V - 6 W (tono cálido)\n\n🔌 Cable de 1,5 metros con enchufe e interruptor incluidos\n\n🏠 Lista para usar. Solo enchufar y disfrutar.",
+    "personalizable": "FALSE",
+    "destacado": "TRUE"
+  },
+  {
+    "id": "13",
+    "nombre_producto": "Lámpara Halo",
+    "variante": "",
+    "categoria": "Lamparas",
+    "precio": "38900",
+    "imagen_url": "",
+    "descripcion": "Con un diseño moderno y minimalista, la Lámpara Halo combina una iluminación cálida con un estilo elegante que realza cualquier ambiente. Ideal para mesas de luz, escritorios, estantes o livings.",
+    "stock": "1",
+    "caracteristicas": "Características\n\n📏 Diámetro: 16 cm\n\n📐 Altura total: 21 cm\n\n💡 Luz LED 220 V - 6 W (tono cálido)\n\n🔌 Cable de 1,5 metros con enchufe e interruptor incluidos\n\n🏠 Lista para usar. Solo enchufar y disfrutar.",
+    "personalizable": "FALSE",
+    "destacado": "TRUE"
   }
 ]

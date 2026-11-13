@@ -216,8 +216,8 @@ export function CajaCompra({ variante }: { variante: Variante }) {
         ) : null}
 
         <p className="mt-4 text-xs leading-relaxed text-humo">
-          Stock permanente. El envío es por Correo Argentino: se cotiza según tu localidad y lo
-          coordinamos por WhatsApp.
+          Trabajamos con stock disponible y por encargo (despacho de 2 a 7 días hábiles). El envío
+          es por Correo Argentino a domicilio o sucursal y lo coordinamos por WhatsApp.
         </p>
       </div>
     </aside>

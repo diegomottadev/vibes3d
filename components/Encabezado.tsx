@@ -12,6 +12,9 @@ type SubitemMenu = {
 
 const MENU_LAMPARAS: SubitemMenu[] = [
   { etiqueta: 'Lámpara Astronauta', href: '/#astronauta' },
+  { etiqueta: 'Lámpara Halo', href: '/#halo' },
+  { etiqueta: 'Lámpara Infinity', href: '/#infinity' },
+  { etiqueta: 'Lámpara Hive', href: '/#hive' },
   { etiqueta: 'Lámpara Mini Luna', href: '/#mini-luna' },
   { etiqueta: 'Lámpara Lunar', href: '/#lunar' },
   { etiqueta: 'Lámparas Geométricas', href: '/#modelos' },

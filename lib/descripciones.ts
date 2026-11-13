@@ -46,4 +46,7 @@ export const patronesPorSlug: Record<string, string> = {
   'lampara-astronauta': 'astronauta sosteniendo la Luna iluminada',
   'lampara-mini-luna': 'relieve lunar con luz LED y control remoto',
   'macetas-animadas': 'maceta decorativa con patitas articuladas',
+  'lampara-hive': 'pantalla de trama orgánica y luz cálida 220 V',
+  'lampara-infinity': 'diseño envolvente en espiral y luz cálida 220 V',
+  'lampara-halo': 'anillos horizontales y luz cálida 220 V',
 };

@@ -126,7 +126,12 @@ export function SeccionLunar({
                           className={
                             idx === 0
                               ? 'object-cover'
-                              : !lunar.esAstronauta && !lunar.esMiniLuna && !lunar.esMaceta
+                              : !lunar.esAstronauta &&
+                                  !lunar.esMiniLuna &&
+                                  !lunar.esMaceta &&
+                                  !lunar.esHive &&
+                                  !lunar.esInfinity &&
+                                  !lunar.esHalo
                                 ? 'object-cover'
                                 : 'object-contain'
                           }

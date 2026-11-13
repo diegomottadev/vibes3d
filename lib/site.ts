@@ -28,7 +28,7 @@ function urlDelSitio(): string {
     );
   }
 
-  return configurada || 'http://localhost:3000';
+  return configurada || 'https://vibes3d.lat';
 }
 
 export const sitio = {

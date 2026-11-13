@@ -15,9 +15,26 @@
  *
  * - Macetas Animadas ($13.900 base):
  *   1 u: $13.900 | 2 u: $25.900 ($12.950 c/u) | 3 o más: $11.900 c/u ($35.700 las 3)
+ *
+ * - Lámpara Hive ($38.900 base):
+ *   1 u: $38.900 | 2 u: $71.900 ($35.950 c/u) | 3 o más: $33.900 c/u ($101.700 las 3)
+ *
+ * - Lámpara Infinity ($41.900 base):
+ *   1 u: $41.900 | 2 u: $77.900 ($38.950 c/u) | 3 o más: $36.900 c/u ($110.700 las 3)
+ *
+ * - Lámpara Halo ($38.900 base):
+ *   1 u: $38.900 | 2 u: $71.900 ($35.950 c/u) | 3 o más: $33.900 c/u ($101.700 las 3)
  */
 
-export type TipoProducto = 'geometrica' | 'lunar' | 'astronauta' | 'mini-luna' | 'maceta';
+export type TipoProducto =
+  | 'geometrica'
+  | 'lunar'
+  | 'astronauta'
+  | 'mini-luna'
+  | 'maceta'
+  | 'hive'
+  | 'infinity'
+  | 'halo';
 
 /** Totales fijos por cantidad para la Lámpara Geométrica. */
 const TOTALES_GEOMETRICA: Record<number, number> = {
@@ -63,8 +80,35 @@ const TOTALES_MACETA: Record<number, number> = {
 export const CANTIDAD_PACK_MACETA = 3;
 const UNITARIO_PACK_MACETA = 11900;
 
+/** Totales fijos por cantidad para la Lámpara Hive. */
+const TOTALES_HIVE: Record<number, number> = {
+  2: 71900,
+};
+
+export const CANTIDAD_PACK_HIVE = 3;
+const UNITARIO_PACK_HIVE = 33900;
+
+/** Totales fijos por cantidad para la Lámpara Infinity. */
+const TOTALES_INFINITY: Record<number, number> = {
+  2: 77900,
+};
+
+export const CANTIDAD_PACK_INFINITY = 3;
+const UNITARIO_PACK_INFINITY = 36900;
+
+/** Totales fijos por cantidad para la Lámpara Halo. */
+const TOTALES_HALO: Record<number, number> = {
+  2: 71900,
+};
+
+export const CANTIDAD_PACK_HALO = 3;
+const UNITARIO_PACK_HALO = 33900;
+
 export function detectarTipoProducto(productoOSlug = ''): TipoProducto {
   const texto = productoOSlug.trim();
+  if (/halo/i.test(texto)) return 'halo';
+  if (/infinit[yi]/i.test(texto)) return 'infinity';
+  if (/hive/i.test(texto)) return 'hive';
   if (/maceta/i.test(texto)) return 'maceta';
   if (/astronaut/i.test(texto)) return 'astronauta';
   if (/mini[\s-]*luna/i.test(texto)) return 'mini-luna';
@@ -109,6 +153,30 @@ export function precioTotal(
     if (TOTALES_MACETA[cantidad]) return TOTALES_MACETA[cantidad];
     if (cantidad >= CANTIDAD_PACK_MACETA) {
       return Math.round(cantidad * UNITARIO_PACK_MACETA);
+    }
+    return precioUnitarioBase * cantidad;
+  }
+
+  if (tipo === 'hive') {
+    if (TOTALES_HIVE[cantidad]) return TOTALES_HIVE[cantidad];
+    if (cantidad >= CANTIDAD_PACK_HIVE) {
+      return Math.round(cantidad * UNITARIO_PACK_HIVE);
+    }
+    return precioUnitarioBase * cantidad;
+  }
+
+  if (tipo === 'infinity') {
+    if (TOTALES_INFINITY[cantidad]) return TOTALES_INFINITY[cantidad];
+    if (cantidad >= CANTIDAD_PACK_INFINITY) {
+      return Math.round(cantidad * UNITARIO_PACK_INFINITY);
+    }
+    return precioUnitarioBase * cantidad;
+  }
+
+  if (tipo === 'halo') {
+    if (TOTALES_HALO[cantidad]) return TOTALES_HALO[cantidad];
+    if (cantidad >= CANTIDAD_PACK_HALO) {
+      return Math.round(cantidad * UNITARIO_PACK_HALO);
     }
     return precioUnitarioBase * cantidad;
   }
@@ -161,6 +229,10 @@ export function calcularTotalesPedido(
     lunar: { unidades: 0, precioBase: 44900 },
     astronauta: { unidades: 0, precioBase: 64900 },
     'mini-luna': { unidades: 0, precioBase: 37900 },
+    maceta: { unidades: 0, precioBase: 13900 },
+    hive: { unidades: 0, precioBase: 38900 },
+    infinity: { unidades: 0, precioBase: 41900 },
+    halo: { unidades: 0, precioBase: 38900 },
   };
 
   for (const linea of lineas) {

@@ -47,6 +47,9 @@ export function DialogoPedido({ abierto, alCerrar }: { abierto: boolean; alCerra
   // Accesos directos (uno por línea de producto) para cuando el carrito queda vacío
   const sugeridosCatalogo = useMemo(() => {
     const astronauta = variantes.find((v) => v.esAstronauta);
+    const halo = variantes.find((v) => v.esHalo);
+    const infinity = variantes.find((v) => v.esInfinity);
+    const hive = variantes.find((v) => v.esHive);
     const miniLuna = variantes.find((v) => v.esMiniLuna);
     const lunar = variantes.find((v) => v.esLunar);
     const maceta = variantes.find((v) => v.esMaceta);
@@ -61,6 +64,33 @@ export function DialogoPedido({ abierto, alCerrar }: { abierto: boolean; alCerra
             precio: astronauta.precio,
             imagen: astronauta.imagen,
             href: `/lampara/${astronauta.slug}`,
+          }
+        : null,
+      halo
+        ? {
+            titulo: halo.producto,
+            subtitulo: '16 × 21 cm · Luz cálida',
+            precio: halo.precio,
+            imagen: halo.imagen,
+            href: `/lampara/${halo.slug}`,
+          }
+        : null,
+      infinity
+        ? {
+            titulo: infinity.producto,
+            subtitulo: '18 × 24 cm · Luz cálida',
+            precio: infinity.precio,
+            imagen: infinity.imagen,
+            href: `/lampara/${infinity.slug}`,
+          }
+        : null,
+      hive
+        ? {
+            titulo: hive.producto,
+            subtitulo: '13 × 23 cm · Luz cálida',
+            precio: hive.precio,
+            imagen: hive.imagen,
+            href: `/lampara/${hive.slug}`,
           }
         : null,
       miniLuna

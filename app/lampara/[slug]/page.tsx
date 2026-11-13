@@ -73,11 +73,17 @@ export default async function PaginaVariante({ params }: { params: { slug: strin
     ? '/#astronauta'
     : variante.esMiniLuna
       ? '/#mini-luna'
-      : variante.esMaceta
-        ? '/#macetas'
-        : variante.esLunar
-          ? '/#lunar'
-          : '/#modelos';
+      : variante.esHalo
+        ? '/#halo'
+        : variante.esInfinity
+          ? '/#infinity'
+          : variante.esHive
+            ? '/#hive'
+            : variante.esMaceta
+              ? '/#macetas'
+              : variante.esLunar
+                ? '/#lunar'
+                : '/#modelos';
 
   return (
     <>
