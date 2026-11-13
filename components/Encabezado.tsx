@@ -7,39 +7,18 @@ import { usePedido } from './PedidoProvider';
 
 type SubitemMenu = {
   etiqueta: string;
-  detalle: string;
   href: string;
 };
 
 const MENU_LAMPARAS: SubitemMenu[] = [
-  {
-    etiqueta: 'Lámpara Astronauta',
-    detalle: 'Luna 18 cm + Astronauta · 33 cm',
-    href: '/#astronauta',
-  },
-  {
-    etiqueta: 'Lámpara Mini Luna',
-    detalle: 'LED con control remoto · 15 cm',
-    href: '/#mini-luna',
-  },
-  {
-    etiqueta: 'Lámpara Lunar',
-    detalle: 'Luz cálida 220 V · 18 cm',
-    href: '/#lunar',
-  },
-  {
-    etiqueta: 'Lámparas Geométricas',
-    detalle: '6 diseños de pantalla con trípode',
-    href: '/#modelos',
-  },
+  { etiqueta: 'Lámpara Astronauta', href: '/#astronauta' },
+  { etiqueta: 'Lámpara Mini Luna', href: '/#mini-luna' },
+  { etiqueta: 'Lámpara Lunar', href: '/#lunar' },
+  { etiqueta: 'Lámparas Geométricas', href: '/#modelos' },
 ];
 
 const MENU_MACETAS: SubitemMenu[] = [
-  {
-    etiqueta: 'Macetas Animadas',
-    detalle: 'Con patitas articuladas · 6 colores',
-    href: '/#macetas',
-  },
+  { etiqueta: 'Macetas Animadas', href: '/#macetas' },
 ];
 
 export function Encabezado() {
@@ -91,19 +70,16 @@ export function Encabezado() {
             </button>
 
             {menuAbierto === 'lamparas' ? (
-              <div className="absolute left-0 top-full z-50 w-64 pt-1 sm:left-auto sm:right-0">
+              <div className="absolute left-0 top-full z-50 w-56 pt-1 sm:left-auto sm:right-0">
                 <ul className="divide-y divide-noche-borde border border-noche-borde bg-noche-suave shadow-2xl">
                   {MENU_LAMPARAS.map((item) => (
                     <li key={item.href}>
                       <Link
                         href={item.href}
                         onClick={() => setMenuAbierto(null)}
-                        className="block px-4 py-3 transition-colors hover:bg-noche"
+                        className="block px-4 py-3 font-display text-xs uppercase tracking-etiqueta text-hueso transition-colors hover:bg-noche hover:text-luz"
                       >
-                        <span className="block font-display text-xs uppercase tracking-etiqueta text-hueso hover:text-luz">
-                          {item.etiqueta}
-                        </span>
-                        <span className="mt-0.5 block text-[11px] text-humo">{item.detalle}</span>
+                        {item.etiqueta}
                       </Link>
                     </li>
                   ))}
@@ -134,19 +110,16 @@ export function Encabezado() {
             </button>
 
             {menuAbierto === 'macetas' ? (
-              <div className="absolute right-0 top-full z-50 w-60 pt-1">
+              <div className="absolute right-0 top-full z-50 w-52 pt-1">
                 <ul className="divide-y divide-noche-borde border border-noche-borde bg-noche-suave shadow-2xl">
                   {MENU_MACETAS.map((item) => (
                     <li key={item.href}>
                       <Link
                         href={item.href}
                         onClick={() => setMenuAbierto(null)}
-                        className="block px-4 py-3 transition-colors hover:bg-noche"
+                        className="block px-4 py-3 font-display text-xs uppercase tracking-etiqueta text-hueso transition-colors hover:bg-noche hover:text-luz"
                       >
-                        <span className="block font-display text-xs uppercase tracking-etiqueta text-hueso hover:text-luz">
-                          {item.etiqueta}
-                        </span>
-                        <span className="mt-0.5 block text-[11px] text-humo">{item.detalle}</span>
+                        {item.etiqueta}
                       </Link>
                     </li>
                   ))}
