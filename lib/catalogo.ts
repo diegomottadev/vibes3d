@@ -258,11 +258,11 @@ function parsearCSV(texto: string): Variante[] {
   }
 
   return data
-    .filter(
-      (fila) =>
-        (fila.variante ?? '').trim().length > 0 ||
-        (fila.nombre_producto ?? '').trim().length > 0,
-    )
+    .filter((fila) => {
+      const tieneVariante = (fila.variante ?? '').trim().length > 0;
+      const tieneDescripcion = (fila.descripcion ?? '').trim().length > 0;
+      return tieneVariante || tieneDescripcion;
+    })
     .map(filaAVariante);
 }
 
