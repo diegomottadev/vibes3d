@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Manrope, Space_Grotesk } from 'next/font/google';
 
 import 'primereact/resources/themes/lara-dark-amber/theme.css';
@@ -33,6 +33,10 @@ const sans = Manrope({
  * La cantidad de modelos y la localidad salen de los datos, no de un texto fijo: si mañana hay
  * siete pantallas, la descripción que ve Google se actualiza sola.
  */
+export const viewport: Viewport = {
+  themeColor: '#F2B544',
+};
+
 function descripcionDelSitio(): string {
   return 'Lámparas, macetas, organizadores y decoración. Envíos a todo el país 🇦🇷';
 }
@@ -40,12 +44,15 @@ function descripcionDelSitio(): string {
 export async function generateMetadata(): Promise<Metadata> {
   const descripcion = descripcionDelSitio();
   const titulo = 'Iluminación decorativa y objetos de diseño';
+  const tituloSocial = `${sitio.marca} — ${titulo}`;
+  const urlImagen = `${sitio.url}/fotos/og-vibes.jpg?v=3`;
   const imagen = {
-    url: '/fotos/og-vibes.jpg?v=2',
+    url: urlImagen,
+    secureUrl: urlImagen,
     width: 1200,
     height: 630,
     type: 'image/jpeg',
-    alt: `${sitio.marca} — ${titulo}`,
+    alt: tituloSocial,
   };
 
   return {
@@ -63,22 +70,24 @@ export async function generateMetadata(): Promise<Metadata> {
       'lámpara voronoi',
       'lámpara hexagonal',
       'luz de ambiente',
+      'macetas animadas',
+      'decoración argentina',
     ],
     alternates: {
-      canonical: '/',
+      canonical: sitio.url,
     },
     openGraph: {
       type: 'website',
       locale: 'es_AR',
       siteName: sitio.marca,
-      title: titulo,
+      title: tituloSocial,
       description: descripcion,
       url: sitio.url,
       images: [imagen],
     },
     twitter: {
       card: 'summary_large_image',
-      title: titulo,
+      title: tituloSocial,
       description: descripcion,
       images: [imagen],
     },
