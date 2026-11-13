@@ -53,7 +53,8 @@ export const sitio = {
     confirmada: true,
   },
 
-  instagram: '', // opcional: URL del perfil, si querés mostrarlo en el footer
+  instagram: 'https://www.instagram.com/vibesimpresiones3d',
+  instagramUsuario: '@vibesimpresiones3d',
 
   moneda: 'ARS',
   locale: 'es-AR',

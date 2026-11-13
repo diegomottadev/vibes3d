@@ -15,6 +15,21 @@ export function PiePagina() {
           </p>
         </div>
 
+        {sitio.instagram ? (
+          <div className="flex flex-col gap-3">
+            <span className="etiqueta">Seguinos en:</span>
+            <a
+              href={sitio.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2.5 font-display text-xl text-hueso transition-colors hover:text-luz"
+            >
+              <i className="pi pi-instagram text-lg text-luz" aria-hidden="true" />
+              <span>{sitio.instagramUsuario}</span>
+            </a>
+          </div>
+        ) : null}
+
         <div className="flex flex-col gap-3">
           <span className="etiqueta">Escribime</span>
           <a
@@ -25,16 +40,6 @@ export function PiePagina() {
           >
             {sitio.whatsappVisible}
           </a>
-          {sitio.instagram ? (
-            <a
-              href={sitio.instagram}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="etiqueta transition-colors hover:text-hueso"
-            >
-              Instagram
-            </a>
-          ) : null}
         </div>
       </div>
 

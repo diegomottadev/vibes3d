@@ -52,7 +52,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const descripcion = descripcionDelSitio(geometricas.length);
   const titulo = 'Iluminación decorativa y objetos de diseño';
   const imagen = {
-    url: '/fotos/og-vibes.jpg',
+    url: '/fotos/og-vibes.jpg?v=2',
     width: 1200,
     height: 630,
     type: 'image/jpeg',
