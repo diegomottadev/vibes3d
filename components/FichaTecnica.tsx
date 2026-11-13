@@ -3,12 +3,13 @@ import { obtenerFichaDeVariante } from '@/lib/seo';
 
 export function FichaTecnica({ variante }: { variante?: Variante }) {
   const datos = obtenerFichaDeVariante(variante);
+  const esMaceta = Boolean(variante?.esMaceta || variante?.tipoProducto === 'maceta');
 
   const filas = [
     { dato: 'Materiales', valor: datos.materiales },
     { dato: 'Dimensiones', valor: datos.dimensionesTexto },
-    { dato: 'Iluminación', valor: datos.iluminacion },
-    { dato: 'Conexión', valor: datos.cable },
+    { dato: esMaceta ? 'Colores' : 'Iluminación', valor: datos.iluminacion },
+    { dato: esMaceta ? 'Diseño' : 'Conexión', valor: datos.cable },
     { dato: 'Soporte', valor: datos.soporte },
     { dato: 'Disponibilidad', valor: datos.disponibilidad },
   ];
@@ -21,7 +22,7 @@ export function FichaTecnica({ variante }: { variante?: Variante }) {
             Ficha técnica {variante ? `· ${variante.producto}` : '· Lámpara Geométrica'}
           </p>
           <h2 className="mt-4 font-display text-4xl leading-tight tracking-tight text-hueso">
-            Lo que viene en la caja.
+            {esMaceta ? 'Detalles del producto.' : 'Lo que viene en la caja.'}
           </h2>
         </div>
 

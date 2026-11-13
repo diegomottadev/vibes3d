@@ -44,4 +44,6 @@ export const patronesPorSlug: Record<string, string> = {
   'diamante-horizontal': 'pantalla diamante horizontal',
   'luna-18-cm-blanco-calido': 'relieve lunar y luz blanco cálido',
   'lampara-astronauta': 'astronauta sosteniendo la Luna iluminada',
+  'lampara-mini-luna': 'relieve lunar con luz LED y control remoto',
+  'macetas-animadas': 'maceta decorativa con patitas articuladas',
 };

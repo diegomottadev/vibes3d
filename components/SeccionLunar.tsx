@@ -69,9 +69,9 @@ export function SeccionLunar({
                     fill
                     sizes="(max-width: 1024px) 100vw, 55vw"
                     className={
-                      indiceActivo === 0
+                      indiceActivo === 0 && !lunar.esMaceta
                         ? 'object-cover transition duration-500 group-hover:scale-105'
-                        : 'object-contain'
+                        : 'object-contain transition duration-500 group-hover:scale-105'
                     }
                   />
                 </Link>
@@ -81,7 +81,11 @@ export function SeccionLunar({
             {items.length > 1 ? (
               <div
                 className={`mt-3 grid gap-2.5 ${
-                  items.length === 4 ? 'grid-cols-4' : 'grid-cols-3 sm:grid-cols-6'
+                  items.length === 4
+                    ? 'grid-cols-4'
+                    : items.length === 5
+                      ? 'grid-cols-5'
+                      : 'grid-cols-3 sm:grid-cols-6'
                 }`}
               >
                 {items.map((item, idx) => {
@@ -120,7 +124,11 @@ export function SeccionLunar({
                           fill
                           sizes="(max-width: 768px) 20vw, 12vw"
                           className={
-                            idx === 0 || !lunar.esAstronauta ? 'object-cover' : 'object-contain'
+                            idx === 0 && !lunar.esMaceta
+                              ? 'object-cover'
+                              : !lunar.esAstronauta && !lunar.esMiniLuna && !lunar.esMaceta
+                                ? 'object-cover'
+                                : 'object-contain'
                           }
                         />
                       )}

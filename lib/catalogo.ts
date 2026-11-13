@@ -50,6 +50,8 @@ export type Variante = {
   tipoProducto: TipoProducto;
   esLunar: boolean;
   esAstronauta: boolean;
+  esMiniLuna: boolean;
+  esMaceta: boolean;
   caracteristicas: string[];
   galeria: MediaGaleria[];
 };
@@ -85,6 +87,11 @@ const GALERIA_LUNAR_EXTRA: MediaGaleria[] = [
 const GALERIA_ASTRONAUTA_EXTRA: MediaGaleria[] = [
   {
     tipo: 'imagen',
+    url: '/fotos/astronauta/foto-departures.webp',
+    etiqueta: 'Luz de ambiente con tablero',
+  },
+  {
+    tipo: 'imagen',
     url: '/fotos/astronauta/foto-completa-v2.webp',
     etiqueta: 'Foto real completa',
   },
@@ -97,6 +104,37 @@ const GALERIA_ASTRONAUTA_EXTRA: MediaGaleria[] = [
     tipo: 'video',
     url: '/fotos/astronauta/video-astronauta.mp4',
     etiqueta: 'Video: encendida en vivo',
+  },
+];
+
+const GALERIA_MINI_LUNA_EXTRA: MediaGaleria[] = [
+  {
+    tipo: 'imagen',
+    url: '/fotos/mini-luna/foto-calida.webp',
+    etiqueta: 'Foto real en luz cálida',
+  },
+  {
+    tipo: 'video',
+    url: '/fotos/mini-luna/video-mini-luna.mp4',
+    etiqueta: 'Video: cambio de tonos en vivo',
+  },
+];
+
+const GALERIA_MACETA_EXTRA: MediaGaleria[] = [
+  {
+    tipo: 'imagen',
+    url: '/fotos/maceta-animada/img_6364.webp',
+    etiqueta: 'Conjunto de macetas en borde',
+  },
+  {
+    tipo: 'imagen',
+    url: '/fotos/maceta-animada/img_6354.webp',
+    etiqueta: 'Vista lateral con patitas articuladas',
+  },
+  {
+    tipo: 'imagen',
+    url: '/fotos/maceta-animada/img_6355.webp',
+    etiqueta: 'Detalle de patitas y terminación',
   },
 ];
 
@@ -128,19 +166,39 @@ function normalizarNombreProducto(nombre: string): string {
   if (/^lampara astronautr?a$/.test(base)) {
     return 'Lámpara Astronauta';
   }
+  if (/^lampara mini luna$/.test(base)) {
+    return 'Lámpara Mini Luna';
+  }
+  if (/^macetas? animadas?$/.test(base)) {
+    return 'Macetas Animadas';
+  }
   return limpio;
 }
 
-function parsearCaracteristicas(texto?: string): string[] {
+function parsearCaracteristicas(texto?: string, tipoProducto?: TipoProducto): string[] {
   if (!texto) return [];
+  if (tipoProducto === 'maceta') {
+    return [
+      'Colores disponibles: Dorado, Naranja, Verde, Blanco, Gris y Negro',
+      'Alto: 8 cm',
+      'Ancho con patitas: 14,8 cm',
+      'Profundidad con patitas: 12,8 cm',
+      'Patitas y bracitos articulados para apoyar en bordes, repisas o escritorios',
+    ];
+  }
   return texto
     .split(/\r?\n/)
     .map((linea) =>
       linea
-        .replace(/^[\p{Emoji}\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F\u200D\u2640-\u2642\s•-]+/gu, '')
+        .replace(/^[\p{Emoji}\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F\u200D\u2640-\u2642\s•*-]+/gu, '')
         .trim(),
     )
-    .filter((linea) => linea.length > 0 && !/^caracter[ií]sticas:?$/i.test(linea));
+    .filter(
+      (linea) =>
+        linea.length > 0 &&
+        !/^caracter[ií]sticas:?$/i.test(linea) &&
+        !/^\$/.test(linea),
+    );
 }
 
 function parsearPrecio(valor: string): number {
@@ -194,27 +252,50 @@ function filaAVariante(fila: FilaCSV): Variante {
   const tipoProducto = detectarTipoProducto(producto || fila.variante);
   const esLunar = tipoProducto === 'lunar';
   const esAstronauta = tipoProducto === 'astronauta';
+  const esMiniLuna = tipoProducto === 'mini-luna';
+  const esMaceta = tipoProducto === 'maceta';
 
   const varianteCruda = (fila.variante ?? '').trim();
   const variante =
     varianteCruda ||
-    (esAstronauta ? 'Luna 18 cm + Astronauta 15 cm | 33 cm' : producto);
+    (esAstronauta
+      ? 'Luna 18 cm + Astronauta 15 cm | 33 cm'
+      : esMiniLuna
+        ? 'Luna 15 cm | LED con control remoto'
+        : esMaceta
+          ? 'Con patitas articuladas | 6 colores'
+          : producto);
 
-  const slug = esAstronauta && !varianteCruda ? 'lampara-astronauta' : slugDeVariante(variante);
+  const slug =
+    esAstronauta && !varianteCruda
+      ? 'lampara-astronauta'
+      : esMiniLuna && !varianteCruda
+        ? 'lampara-mini-luna'
+        : esMaceta && !varianteCruda
+          ? 'macetas-animadas'
+          : slugDeVariante(variante);
   const descripcionPropia = descripcionesPorSlug[slug];
 
   const fallbackFoto = esAstronauta
     ? '/fotos/lampara-astronauta.webp'
-    : '/fotos/luna-18-cm-blanco-calido.webp';
+    : esMiniLuna
+      ? '/fotos/lampara-mini-luna.webp'
+      : esMaceta
+        ? '/fotos/macetas-animadas.webp'
+        : '/fotos/luna-18-cm-blanco-calido.webp';
 
   const imagenPrincipal =
     fotoLocal(slug) ?? ((fila.imagen_url ?? '').trim() || fallbackFoto);
 
   const galeriaExtra = esAstronauta
     ? GALERIA_ASTRONAUTA_EXTRA
-    : esLunar
-      ? GALERIA_LUNAR_EXTRA
-      : [];
+    : esMiniLuna
+      ? GALERIA_MINI_LUNA_EXTRA
+      : esMaceta
+        ? GALERIA_MACETA_EXTRA
+        : esLunar
+          ? GALERIA_LUNAR_EXTRA
+          : [];
 
   const galeria: MediaGaleria[] = [
     {
@@ -241,7 +322,9 @@ function filaAVariante(fila: FilaCSV): Variante {
     tipoProducto,
     esLunar,
     esAstronauta,
-    caracteristicas: parsearCaracteristicas(fila.caracteristicas),
+    esMiniLuna,
+    esMaceta,
+    caracteristicas: parsearCaracteristicas(fila.caracteristicas, tipoProducto),
     galeria,
   };
 }
@@ -312,6 +395,18 @@ export async function obtenerVarianteLunar(): Promise<Variante | undefined> {
 export async function obtenerVarianteAstronauta(): Promise<Variante | undefined> {
   const catalogo = await obtenerCatalogo();
   return catalogo.find((v) => v.tipoProducto === 'astronauta');
+}
+
+/** La Lámpara Mini Luna (si está cargada en la planilla). */
+export async function obtenerVarianteMiniLuna(): Promise<Variante | undefined> {
+  const catalogo = await obtenerCatalogo();
+  return catalogo.find((v) => v.tipoProducto === 'mini-luna');
+}
+
+/** Las Macetas Animadas (si están cargadas en la planilla). */
+export async function obtenerVarianteMaceta(): Promise<Variante | undefined> {
+  const catalogo = await obtenerCatalogo();
+  return catalogo.find((v) => v.tipoProducto === 'maceta');
 }
 
 export async function obtenerVariante(slug: string): Promise<Variante | undefined> {

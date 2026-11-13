@@ -44,10 +44,12 @@ export function DialogoPedido({ abierto, alCerrar }: { abierto: boolean; alCerra
   const vacio = lineas.length === 0;
   const faltantes = OBLIGATORIOS.filter((campo) => datos[campo].trim().length === 0);
 
-  // Tres accesos directos (uno por línea de producto) para cuando el carrito queda vacío
+  // Accesos directos (uno por línea de producto) para cuando el carrito queda vacío
   const sugeridosCatalogo = useMemo(() => {
     const astronauta = variantes.find((v) => v.esAstronauta);
+    const miniLuna = variantes.find((v) => v.esMiniLuna);
     const lunar = variantes.find((v) => v.esLunar);
+    const maceta = variantes.find((v) => v.esMaceta);
     const geometrica = variantes.find((v) => v.tipoProducto === 'geometrica' && v.destacado) ??
       variantes.find((v) => v.tipoProducto === 'geometrica');
 
@@ -59,6 +61,15 @@ export function DialogoPedido({ abierto, alCerrar }: { abierto: boolean; alCerra
             precio: astronauta.precio,
             imagen: astronauta.imagen,
             href: `/lampara/${astronauta.slug}`,
+          }
+        : null,
+      miniLuna
+        ? {
+            titulo: miniLuna.producto,
+            subtitulo: '15 cm · Control remoto',
+            precio: miniLuna.precio,
+            imagen: miniLuna.imagen,
+            href: `/lampara/${miniLuna.slug}`,
           }
         : null,
       lunar
@@ -77,6 +88,15 @@ export function DialogoPedido({ abierto, alCerrar }: { abierto: boolean; alCerra
             precio: geometrica.precio,
             imagen: geometrica.imagen,
             href: '/#modelos',
+          }
+        : null,
+      maceta
+        ? {
+            titulo: maceta.producto,
+            subtitulo: 'Con patitas · 6 colores',
+            precio: maceta.precio,
+            imagen: maceta.imagen,
+            href: `/lampara/${maceta.slug}`,
           }
         : null,
     ].filter((x): x is NonNullable<typeof x> => x !== null);
@@ -180,7 +200,7 @@ export function DialogoPedido({ abierto, alCerrar }: { abierto: boolean; alCerra
           </p>
 
           {sugeridosCatalogo.length > 0 ? (
-            <div className="mt-6 grid gap-3 text-left sm:grid-cols-3">
+            <div className="mt-6 grid gap-3 text-left sm:grid-cols-2 lg:grid-cols-4">
               {sugeridosCatalogo.map((item) => (
                 <Link
                   key={item.titulo}

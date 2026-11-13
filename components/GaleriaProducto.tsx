@@ -36,7 +36,11 @@ export function GaleriaProducto({ variante }: { variante: Variante }) {
             fill
             priority={indiceActivo === 0}
             sizes="(max-width: 1024px) 100vw, 55vw"
-            className={indiceActivo === 0 ? 'object-cover' : 'object-contain'}
+            className={
+              indiceActivo === 0 && !variante.esMaceta
+                ? 'object-cover'
+                : 'object-contain'
+            }
           />
         )}
       </div>
@@ -44,7 +48,13 @@ export function GaleriaProducto({ variante }: { variante: Variante }) {
       {items.length > 1 ? (
         <ul
           aria-label="Galería de fotos y videos del producto"
-          className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-6"
+          className={`mt-3 grid gap-2 ${
+            items.length === 4
+              ? 'grid-cols-4'
+              : items.length === 5
+                ? 'grid-cols-5'
+                : 'grid-cols-3 sm:grid-cols-6'
+          }`}
         >
           {items.map((item, idx) => {
             const seleccionado = idx === indiceActivo;
@@ -84,7 +94,11 @@ export function GaleriaProducto({ variante }: { variante: Variante }) {
                       sizes="96px"
                       loading="eager"
                       className={
-                        idx === 0 || !variante.esAstronauta ? 'object-cover' : 'object-contain'
+                        idx === 0 && !variante.esMaceta
+                          ? 'object-cover'
+                          : !variante.esAstronauta && !variante.esMiniLuna && !variante.esMaceta
+                            ? 'object-cover'
+                            : 'object-contain'
                       }
                     />
                   )}

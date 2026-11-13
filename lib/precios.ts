@@ -9,9 +9,15 @@
  *
  * - Lámpara Astronauta ($64.900 base):
  *   1 u: $64.900 | 2 u: $119.000 ($59.500 c/u) | 3 o más: $56.900 c/u
+ *
+ * - Lámpara Mini Luna ($37.900 base):
+ *   1 u: $37.900 | 2 u: $69.900 ($34.950 c/u) | 3 o más: $32.900 c/u ($98.700 las 3)
+ *
+ * - Macetas Animadas ($13.900 base):
+ *   1 u: $13.900 | 2 u: $25.900 ($12.950 c/u) | 3 o más: $11.900 c/u ($35.700 las 3)
  */
 
-export type TipoProducto = 'geometrica' | 'lunar' | 'astronauta';
+export type TipoProducto = 'geometrica' | 'lunar' | 'astronauta' | 'mini-luna' | 'maceta';
 
 /** Totales fijos por cantidad para la Lámpara Geométrica. */
 const TOTALES_GEOMETRICA: Record<number, number> = {
@@ -41,9 +47,27 @@ const TOTALES_ASTRONAUTA: Record<number, number> = {
 export const CANTIDAD_PACK_ASTRONAUTA = 3;
 const UNITARIO_PACK_ASTRONAUTA = 56900;
 
+/** Totales fijos por cantidad para la Lámpara Mini Luna. */
+const TOTALES_MINI_LUNA: Record<number, number> = {
+  2: 69900,
+};
+
+export const CANTIDAD_PACK_MINI_LUNA = 3;
+const UNITARIO_PACK_MINI_LUNA = 32900;
+
+/** Totales fijos por cantidad para Macetas Animadas. */
+const TOTALES_MACETA: Record<number, number> = {
+  2: 25900,
+};
+
+export const CANTIDAD_PACK_MACETA = 3;
+const UNITARIO_PACK_MACETA = 11900;
+
 export function detectarTipoProducto(productoOSlug = ''): TipoProducto {
   const texto = productoOSlug.trim();
+  if (/maceta/i.test(texto)) return 'maceta';
   if (/astronaut/i.test(texto)) return 'astronauta';
+  if (/mini[\s-]*luna/i.test(texto)) return 'mini-luna';
   if (/lunar|^luna-/i.test(texto)) return 'lunar';
   return 'geometrica';
 }
@@ -69,6 +93,22 @@ export function precioTotal(
     if (TOTALES_ASTRONAUTA[cantidad]) return TOTALES_ASTRONAUTA[cantidad];
     if (cantidad >= CANTIDAD_PACK_ASTRONAUTA) {
       return Math.round(cantidad * UNITARIO_PACK_ASTRONAUTA);
+    }
+    return precioUnitarioBase * cantidad;
+  }
+
+  if (tipo === 'mini-luna') {
+    if (TOTALES_MINI_LUNA[cantidad]) return TOTALES_MINI_LUNA[cantidad];
+    if (cantidad >= CANTIDAD_PACK_MINI_LUNA) {
+      return Math.round(cantidad * UNITARIO_PACK_MINI_LUNA);
+    }
+    return precioUnitarioBase * cantidad;
+  }
+
+  if (tipo === 'maceta') {
+    if (TOTALES_MACETA[cantidad]) return TOTALES_MACETA[cantidad];
+    if (cantidad >= CANTIDAD_PACK_MACETA) {
+      return Math.round(cantidad * UNITARIO_PACK_MACETA);
     }
     return precioUnitarioBase * cantidad;
   }
@@ -120,6 +160,7 @@ export function calcularTotalesPedido(
     geometrica: { unidades: 0, precioBase: 34999 },
     lunar: { unidades: 0, precioBase: 44900 },
     astronauta: { unidades: 0, precioBase: 64900 },
+    'mini-luna': { unidades: 0, precioBase: 37900 },
   };
 
   for (const linea of lineas) {

@@ -1,5 +1,5 @@
 import type { Variante } from './catalogo';
-import { ficha, fichaAstronauta, fichaLunar } from './seo';
+import { ficha, fichaAstronauta, fichaLunar, fichaMaceta, fichaMiniLuna } from './seo';
 
 export type ItemPregunta = {
   pregunta: string;
@@ -104,11 +104,74 @@ export const preguntasAstronauta: ItemPregunta[] = [
   ...COMUNES_ENVIO_Y_PEDIDO,
 ];
 
+export const preguntasMiniLuna: ItemPregunta[] = [
+  {
+    pregunta: '¿Qué tamaño tiene la Lámpara Mini Luna?',
+    respuesta:
+      'La esfera tiene 15 cm de diámetro e incluye su base cilíndrica blanca de apoyo, ideal para ' +
+      'mesas de luz, escritorios, repisas o rincones de lectura.',
+  },
+  {
+    pregunta: '¿Cómo funciona el control remoto?',
+    respuesta:
+      'El control remoto incluido permite encender, apagar y ajustar cómodamente los tonos e ' +
+      'intensidad de la iluminación LED a distancia para adaptar el ambiente a tu gusto.',
+  },
+  {
+    pregunta: '¿Cómo se alimenta la lámpara?',
+    respuesta:
+      `Incluye ${fichaMiniLuna.cable.toLowerCase()}. Podés conectarla a cualquier cargador de ` +
+      'celular USB estándar, puerto de computadora o batería externa.',
+  },
+  {
+    pregunta: '¿Qué incluye la caja?',
+    respuesta:
+      'La esfera lunar de 15 cm con relieve texturado, la base cilíndrica blanca de apoyo, ' +
+      'el control remoto y el cable de alimentación USB.',
+  },
+  ...COMUNES_ENVIO_Y_PEDIDO,
+];
+
+export const preguntasMaceta: ItemPregunta[] = [
+  {
+    pregunta: '¿En qué colores vienen las Macetas Animadas?',
+    respuesta:
+      'Están disponibles en 6 colores: Dorado, Naranja, Verde, Blanco, Gris y Negro. Al enviar tu ' +
+      'pedido por WhatsApp podés indicarnos qué colores preferís o combinarlos como quieras.',
+  },
+  {
+    pregunta: '¿Cuáles son las medidas de la maceta?',
+    respuesta:
+      `${fichaMaceta.dimensionesTexto}. Es el tamaño ideal para suculentas, pequeños cactus o ` +
+      'plantas decorativas de interior.',
+  },
+  {
+    pregunta: '¿Las patitas son articuladas?',
+    respuesta:
+      'Sí, las patitas cuentan con eslabones articulados que les dan movimiento natural para que ' +
+      'puedas apoyarlas en el borde de un estante, escritorio o mesa con las patitas colgando.',
+  },
+  {
+    pregunta: '¿De qué material están hechas?',
+    respuesta: fichaMaceta.materiales,
+  },
+  ...COMUNES_ENVIO_Y_PEDIDO,
+];
+
 export function obtenerPreguntasDeVariante(
-  variante?: Pick<Variante, 'esLunar' | 'esAstronauta' | 'tipoProducto'>,
+  variante?: Pick<
+    Variante,
+    'esLunar' | 'esAstronauta' | 'esMiniLuna' | 'esMaceta' | 'tipoProducto'
+  >,
 ): ItemPregunta[] {
+  if (variante?.esMaceta || variante?.tipoProducto === 'maceta') {
+    return preguntasMaceta;
+  }
   if (variante?.esAstronauta || variante?.tipoProducto === 'astronauta') {
     return preguntasAstronauta;
+  }
+  if (variante?.esMiniLuna || variante?.tipoProducto === 'mini-luna') {
+    return preguntasMiniLuna;
   }
   if (variante?.esLunar || variante?.tipoProducto === 'lunar') {
     return preguntasLunar;
@@ -117,7 +180,10 @@ export function obtenerPreguntasDeVariante(
 }
 
 export function jsonLdPreguntas(
-  variante?: Pick<Variante, 'esLunar' | 'esAstronauta' | 'tipoProducto'>,
+  variante?: Pick<
+    Variante,
+    'esLunar' | 'esAstronauta' | 'esMiniLuna' | 'esMaceta' | 'tipoProducto'
+  >,
 ) {
   const lista = obtenerPreguntasDeVariante(variante);
   return {

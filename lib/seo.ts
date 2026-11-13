@@ -59,11 +59,50 @@ export const fichaAstronauta: DatosFicha = {
   disponibilidad: 'Stock permanente — Lista para enchufar y disfrutar',
 };
 
+/** Ficha técnica de la Lámpara Mini Luna (15 cm). */
+export const fichaMiniLuna: DatosFicha = {
+  materiales:
+    'Esfera de 15 cm con relieve texturado inspirado en la superficie lunar y base cilíndrica ' +
+    'minimalista de alta resistencia.',
+  materialesCorto: 'Esfera con relieve lunar de 15 cm y base cilíndrica',
+  iluminacion: 'Luz LED regulable con control remoto incluido',
+  cable: 'Cable USB incluido (compatible con cualquier cargador USB)',
+  soporte: 'Base cilíndrica blanca de apoyo y control remoto incluidos',
+  dimensionesTexto: '15 cm (150 mm) de diámetro',
+  anchoMm: 150,
+  altoMm: 150,
+  disponibilidad: 'Stock permanente — Lista para conectar y usar',
+};
+
+/** Ficha técnica de las Macetas Animadas. */
+export const fichaMaceta: DatosFicha = {
+  materiales:
+    'Elaboradas en PLA de origen biológico y alta resistencia, aptas para plantas de interior, ' +
+    'suculentas y cactus.',
+  materialesCorto: 'Estructura resistente con patitas articuladas',
+  iluminacion: 'Dorado, Naranja, Verde, Blanco, Gris y Negro',
+  cable: 'Patitas y bracitos articulados para sentar en bordes o superficies planas',
+  soporte: 'Apoyo estable con manitos laterales integradas',
+  dimensionesTexto: '8 cm de alto × 14,8 cm de ancho × 12,8 cm de profundidad (con patitas)',
+  anchoMm: 148,
+  altoMm: 80,
+  disponibilidad: 'Stock permanente en los 6 colores',
+};
+
 export function obtenerFichaDeVariante(
-  variante?: Pick<Variante, 'esLunar' | 'esAstronauta' | 'tipoProducto'>,
+  variante?: Pick<
+    Variante,
+    'esLunar' | 'esAstronauta' | 'esMiniLuna' | 'esMaceta' | 'tipoProducto'
+  >,
 ): DatosFicha {
+  if (variante?.esMaceta || variante?.tipoProducto === 'maceta') {
+    return fichaMaceta;
+  }
   if (variante?.esAstronauta || variante?.tipoProducto === 'astronauta') {
     return fichaAstronauta;
+  }
+  if (variante?.esMiniLuna || variante?.tipoProducto === 'mini-luna') {
+    return fichaMiniLuna;
   }
   if (variante?.esLunar || variante?.tipoProducto === 'lunar') {
     return fichaLunar;
@@ -138,9 +177,13 @@ export function jsonLdNegocio() {
 export function jsonLdMigas(variante: Variante) {
   const anclaSeccion = variante.esAstronauta
     ? '#astronauta'
-    : variante.esLunar
-      ? '#lunar'
-      : '#modelos';
+    : variante.esMiniLuna
+      ? '#mini-luna'
+      : variante.esMaceta
+        ? '#macetas'
+        : variante.esLunar
+          ? '#lunar'
+          : '#modelos';
 
   return {
     '@context': 'https://schema.org',

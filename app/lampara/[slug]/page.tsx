@@ -71,9 +71,13 @@ export default async function PaginaVariante({ params }: { params: { slug: strin
   const esEspecial = variante.tipoProducto !== 'geometrica';
   const rutaSeccion = variante.esAstronauta
     ? '/#astronauta'
-    : variante.esLunar
-      ? '/#lunar'
-      : '/#modelos';
+    : variante.esMiniLuna
+      ? '/#mini-luna'
+      : variante.esMaceta
+        ? '/#macetas'
+        : variante.esLunar
+          ? '/#lunar'
+          : '/#modelos';
 
   return (
     <>

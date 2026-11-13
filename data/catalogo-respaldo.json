@@ -102,5 +102,31 @@
     "caracteristicas": "Características\n\n🚀 Altura total: 33 cm\n\n🌕 Luna de 18 cm de diámetro\n\n👨‍🚀 Astronauta de 15 cm de altura\n\n💡 Luz LED 220 V - 6 W (tono cálido)\n\n🔌 Cable blanco de 1,5 metros con enchufe e interruptor incluidos\n\n🏠 Lista para usar. Solo enchufar y disfrutar.",
     "personalizable": "FALSE",
     "destacado": "TRUE"
+  },
+  {
+    "id": "9",
+    "nombre_producto": "Lámpara mini luna",
+    "variante": "",
+    "categoria": "Lamparas",
+    "precio": "37900",
+    "imagen_url": "",
+    "descripcion": "Una lámpara decorativa con diseño inspirado en la superficie lunar, ideal para crear un ambiente cálido y relajante en cualquier rincón del hogar.",
+    "stock": "",
+    "caracteristicas": "🌕 Diámetro: 15 cm\n\n💡 Luz LED con control remoto\n\n🔋 Cable USB (compatible con cargador USB)\n\n🎨 Permite ajustar la iluminación desde el control remoto\n\n🏠 Ideal para dormitorios, escritorios, mesas de luz o decoración",
+    "personalizable": "FALSE",
+    "destacado": "TRUE"
+  },
+  {
+    "id": "10",
+    "nombre_producto": "Macetas Animadas",
+    "variante": "",
+    "categoria": "Macetas",
+    "precio": "13900",
+    "imagen_url": "",
+    "descripcion": "Un detalle único para darle vida a cualquier rincón. Estas macetas cuentan con pequeñas patitas articuladas que le dan un estilo divertido y original, haciendo que tus plantas sean protagonistas de la decoración.",
+    "stock": "1",
+    "caracteristicas": "Colores\n💛 dorado\n🧡 naranja\n💚 verde\n🤍 blanco\n🩶 gris\n🖤 negro\n📏 Medidas:\n* Alto: 8 cm \n* Ancho con patitas: 14,8 cm \n* Profundidad con patitas: 12,8 cm\n💰$14.000",
+    "personalizable": "TRUE",
+    "destacado": "TRUE"
   }
 ]
